@@ -1,0 +1,9 @@
+# action.yml
+name: 'Label deploy check'
+description: 'Check if the deploy label is present'
+outputs:
+  status:
+    description: 'status'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
