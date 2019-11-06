@@ -63,9 +63,9 @@ main(){
     
     git config remote.origin.url "https://${GITHUB_ACTOR}:${INPUT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
-    git fetch
+    git fetch 
     
-    revision=$(git rev-list --left-right --count origin/master...${branch} | head -c 1)
+    revision=$(git rev-list --left-right --count origin/master...origin/${branch} | head -c 1)
 
     echo "revision"
     echo ${revision}
