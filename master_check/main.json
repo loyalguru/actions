@@ -1,0 +1,14 @@
+{
+    "action": "closed",
+    "pull_request": {
+        "title": "Update the README with new information",
+        "body": "This is a pretty simple change that we need to pull into master.",
+        "merged": true,
+        "head": {
+            "ref": "trico-patch-6"
+        }
+    },
+    "head": {
+        "ref": "trico-patch-6"
+    }
+}

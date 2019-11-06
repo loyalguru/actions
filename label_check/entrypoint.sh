@@ -17,6 +17,8 @@ main(){
     labels=$(echo "${issue}" | jq -r .labels)
 
     has_deploy_label="nop"
+
+    echo labels
     
     # Reading labels
     for row in $(echo "${labels}" | jq -r '.[] | @base64'); do
