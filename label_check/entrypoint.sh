@@ -68,7 +68,7 @@ main(){
     revision=$(git rev-list --left-right --count origin/master...origin/${branch} | head -c 1)
 
     echo "revision"
-    echo "git rev-list --left-right --count origin/master...origin/${branch}"
+    echo "$(git rev-list --left-right --count origin/master...origin/${branch})"
     echo ${revision}
 
     if [ "$revision" != "0" ];then
