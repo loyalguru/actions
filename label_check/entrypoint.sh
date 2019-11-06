@@ -13,6 +13,8 @@ main(){
     -H "Authorization: token ${GITHUB_TOKEN}")
 
     echo "check done"
+
+    echo ${issue}
  
     labels=$(echo "${issue}" | jq -r .labels)
 
