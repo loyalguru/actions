@@ -1,4 +1,4 @@
-FROM alpine:git
+FROM alpine/git
 
 LABEL "com.github.actions.name"="Deploy label check"
 LABEL "com.github.actions.description"="Check if there is a deploy label"
