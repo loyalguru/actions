@@ -61,6 +61,8 @@ main(){
 
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
 
+    git fetch
+    
     revision=$(git rev-list --left-right --count origin/master...${branch} | head -c 1)
 
     echo "revision"
