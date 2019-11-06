@@ -43,7 +43,7 @@ main(){
     title=$(echo "${issue}" | jq -r .title)
 
     chat=$(curl -X POST \
-    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"⚡ Atención acción de deploy lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* ⚡\"}")
 
@@ -64,7 +64,7 @@ main(){
       echo ${resp_del}
 
       chat=$(curl -X POST \
-    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"🚫  🚫 DEPLOY PARADO: Hay otro deploy en curso. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
@@ -95,7 +95,7 @@ main(){
 
 
     chat=$(curl -X POST \
-    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"🚫  🚫 DEPLOY PARADO: La rama está por detrás de master. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
@@ -105,7 +105,7 @@ main(){
 
 
  chat=$(curl -X POST \
-    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"⭐ ⭐ DEPLOY LISTO: Tienes via libre para deployar. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* ⭐ ⭐\"}")
 
