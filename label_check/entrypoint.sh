@@ -63,6 +63,9 @@ main(){
 
     revision=$(git rev-list --left-right --count origin/master...${branch} | head -c 1)
 
+    echo "revision"
+    echo ${revision}
+
     if [ "$revision" != "0" ];then
         echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
         echo " "
