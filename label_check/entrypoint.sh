@@ -46,6 +46,8 @@ main(){
 
     count=$(echo "${issues}" | jq -r .total_count)
 
+    echo ${issues}
+
 
     if [ $count != "1" ]; then
       echo "Deploy in course"
