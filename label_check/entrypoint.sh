@@ -5,6 +5,7 @@ set -e
 main(){
     action=$(jq --raw-output .action ${GITHUB_EVENT_PATH})
     number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
+    title=$(jq --raw-output .title ${GITHUB_EVENT_PATH})
 
     echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
     echo "checking labels ${GITHUB_REPOSITORY}"
@@ -48,7 +49,8 @@ main(){
   -H 'Connection: keep-alive' \
   -H 'Content-Length: 93' \
   -H 'Content-Type: application/json' \
-  -H 'Host: chat.googleapis.com')
+  -H 'Host: chat.googleapis.com' \
+  -d '{"text" : "⚡ Atención acción de deploy lanzada por ${GITHUB_ACTOR} en el PR ${title} del proyecto ${GITHUB_REPOSITORY} ⚡"}')
 
     echo ${chat}
 
