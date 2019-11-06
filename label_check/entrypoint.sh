@@ -40,6 +40,17 @@ main(){
         exit 1
     fi
 
+    chat=$(curl -X POST \
+  "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+  -H 'Accept: */*' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Length: 93' \
+  -H 'Content-Type: application/json' \
+  -H 'Host: chat.googleapis.com')
+
+    echo ${chat}
 
     issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:deploy+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${INPUT_TOKEN}")
