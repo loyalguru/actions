@@ -52,7 +52,7 @@ main(){
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
       resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
       -H "Authorization: token ${INPUT_TOKEN}")
-      echo resp_del
+      echo ${resp_del}
 
       exit 1
     fi
@@ -69,7 +69,7 @@ main(){
         echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
         resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
         -H "Authorization: token ${INPUT_TOKEN}")
-        echo resp_del2
+        echo ${resp_del2}
         exit 1;
     fi
 
