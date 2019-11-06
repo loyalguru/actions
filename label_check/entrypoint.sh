@@ -10,7 +10,7 @@ main(){
     echo "checking labels ${GITHUB_REPOSITORY}"
     
     issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${secrets.GITHUB_TOKEN}")
+    -H "Authorization: token ${INPUT_TOKEN}")
 
     echo "check done"
 
