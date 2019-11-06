@@ -41,7 +41,7 @@ main(){
     fi
 
 
-    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr&is:open&label:deploy&repo:${GITHUB_REPOSITORY}" \
+    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:deploy+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${INPUT_TOKEN}")
 
     count=$(echo "${issues}" | jq -r .total_count)
