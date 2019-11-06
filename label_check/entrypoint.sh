@@ -5,7 +5,6 @@ set -e
 main(){
     action=$(jq --raw-output .action ${GITHUB_EVENT_PATH})
     number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
-    title=$(jq --raw-output .title ${GITHUB_EVENT_PATH})
 
     echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
     echo "checking labels ${GITHUB_REPOSITORY}"
@@ -41,7 +40,7 @@ main(){
         exit 1
     fi
 
-
+    title=$(echo "${issue}" | jq -r .title)
 
     chat=$(curl -X POST \
     "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
