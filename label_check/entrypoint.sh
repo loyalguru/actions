@@ -43,13 +43,7 @@ main(){
 
     chat=$(curl -X POST \
   "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-  -H 'Accept: */*' \
-  -H 'Accept-Encoding: gzip, deflate' \
-  -H 'Cache-Control: no-cache' \
-  -H 'Connection: keep-alive' \
-  -H 'Content-Length: 93' \
   -H 'Content-Type: application/json' \
-  -H 'Host: chat.googleapis.com' \
   -d '{"text" : "⚡ Atención acción de deploy lanzada por ${GITHUB_ACTOR} en el PR ${title} del proyecto ${GITHUB_REPOSITORY} ⚡"}')
 
     echo ${chat}
