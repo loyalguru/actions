@@ -47,7 +47,6 @@ main(){
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"⚡ Atención acción de deploy lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* ⚡\"}")
 
-    echo ${chat}
 
     issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:deploy+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${INPUT_TOKEN}")
@@ -63,6 +62,11 @@ main(){
       resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
       -H "Authorization: token ${INPUT_TOKEN}")
       echo ${resp_del}
+
+      chat=$(curl -X POST \
+    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    -H 'Content-Type: application/json' \
+    -d "{\"text\" : \"⚡ DEPLOY PARADO: Hay otro deploy en curso. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* ⚡\"}")
 
       exit 1
     fi
@@ -88,8 +92,22 @@ main(){
         resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
         -H "Authorization: token ${INPUT_TOKEN}")
         echo ${resp_del2}
+
+
+    chat=$(curl -X POST \
+    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    -H 'Content-Type: application/json' \
+    -d "{\"text\" : \"🚫  🚫 DEPLOY PARADO: La rama está por detrás de master. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
+
+
         exit 1;
     fi
+
+
+ chat=$(curl -X POST \
+    "https://chat.googleapis.com/v1/spaces/AAAAKMO_ki8/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+    -H 'Content-Type: application/json' \
+    -d "{\"text\" : \"⭐ ⭐ DEPLOY LISTO: Tienes via libre para deployar. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
     
 }
