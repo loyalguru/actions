@@ -39,6 +39,41 @@ main(){
         echo "has no deploy label skiping"
         exit 1
     fi
+
+
+    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr&is:open&label:deploy&repo:${GITHUB_REPOSITORY}" \
+    -H "Authorization: token ${INPUT_TOKEN}")
+
+    count=$(echo "${issues}" | jq -r .total_count)
+
+
+    if [ $count != "1" ]; then
+      echo "Deploy in course"
+      # /repos/:owner/:repo/issues/:issue_number/labels/:name
+      resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
+      -H "Authorization: token ${INPUT_TOKEN}")
+      echo resp_del
+
+      exit 1
+    fi
+
+    branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
+
+    revision=$(git rev-list --left-right --count origin/master...${branch} | head -c 1)
+
+    if [ "$revision" != "0" ];then
+        echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
+        echo " "
+        echo "CANNOT DEPLOY YOUR BANCH IS BEHIND MASTER";
+        echo " "
+        echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
+        resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
+        -H "Authorization: token ${INPUT_TOKEN}")
+        echo resp_del2
+        exit 1;
+    fi
+
+    
 }
 
 main "$@"
