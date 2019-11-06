@@ -61,7 +61,7 @@ main(){
 
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
     
-    git config remote.origin.url "https://${INPUT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+    git config remote.origin.url "https://${GITHUB_ACTOR}:${INPUT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
     git fetch
     
