@@ -63,7 +63,7 @@ main(){
 
   while [[ "$ready" != "true" ]] && [[ $tries -lt 60 ]]
   do
-    tries=$[$tries+1]
+    ((tries+=1))
     ready=$(curl -s -X POST "https://api.loyal.guru/deploy" \
       -H "Authorization: Basic ${token}" \
       -H "Content-Type: application/json" \
