@@ -9,7 +9,8 @@ main(){
   release="false"
   tries="1"
   token=$INPUT_RAILSTOKEN
-  pr_title=$(echo "${issue}" | jq -r .title)
+  echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
+  title=$(echo "${issue}" | jq -r .title)
 
   echo "-------------------------------------"
   echo "-------------------------------------"
@@ -45,7 +46,7 @@ main(){
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"🚫 WORKERS CHECK Hold: unexpected response. Check if hold has been applied and retry. \
-        Deployer: *${GITHUB_ACTOR}*. PR: *${pr_title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
 
     exit 1
   fi
@@ -88,7 +89,7 @@ main(){
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"⭐ WORKERS CHECK: Ready to deploy.\
-        Deployer: *${GITHUB_ACTOR}*. PR: *${pr_title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
+        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
 
     echo "READY TO DEPLOY"
   else
@@ -109,7 +110,7 @@ main(){
       "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
       -H 'Content-Type: application/json' \
       -d "{\"text\" : \"🚫 WORKERS CHECK Release: unexpected response. Check if release has been applied and retry. \
-          Deployer: *${GITHUB_ACTOR}*. PR: *${pr_title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+          Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
 
       exit 1
     fi
@@ -122,7 +123,7 @@ main(){
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"⚡ WORKERS CHECK: Timeout. Semaphores have been released. \
-        Deployer: *${GITHUB_ACTOR}*. PR: *${pr_title}*. Project: *${GITHUB_REPOSITORY}* ⚡\"}")
+        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⚡\"}")
   
     echo "FAIL: WORKERS RUNNING"
   fi
