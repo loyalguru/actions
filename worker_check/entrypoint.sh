@@ -9,6 +9,8 @@ main(){
   release="false"
   tries="1"
   token=$INPUT_RAILSTOKEN
+  issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
+    -H "Authorization: token ${INPUT_TOKEN}")
   echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
   title=$(echo "${issue}" | jq -r .title)
 
