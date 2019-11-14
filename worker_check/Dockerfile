@@ -14,6 +14,7 @@ RUN	apk add --no-cache \
 	ca-certificates \
 	curl \
 	curl-dev \
+	jq \
 	coreutils
 
 ADD entrypoint.sh /entrypoint.sh
