@@ -6,22 +6,19 @@ main(){
     action=$(jq --raw-output .action ${GITHUB_EVENT_PATH})
     number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
 
-    echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
-    echo "checking labels ${GITHUB_REPOSITORY}"
+    echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"master\"}"
     
-    issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
+    issue=$(curl -s -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${INPUT_TOKEN}")
+    title=$(echo "${issue}" | jq -r .title)
 
-    echo "check done"
-
-    echo ${issue}
+    echo ""
+    echo ""
+    echo "Checking if PR has '${INPUT_LABEL}' label..."
  
+
     labels=$(echo "${issue}" | jq -r .labels)
-
-    has_deploy_label="nop"
-
-    echo ${labels}
-    
+    has_required_label="nop"
     # Reading labels
     for row in $(echo "${labels}" | jq -r '.[] | @base64'); do
         _jq() {
@@ -29,26 +26,31 @@ main(){
         }
         label_name=$(_jq '.name')
 
-        if [ $label_name = "deploy" ]; then
-            echo "has deploy label, we are good"
-            has_deploy_label="yes"
+        if [ $label_name = ${INPUT_LABEL} ]; then
+            echo "has ${INPUT_LABEL} label, we are good"
+            has_required_label="yes"
         fi
     done
 
-    if [ $has_deploy_label = "nop" ]; then
-        echo "has no deploy label skiping"
-        exit 1
+    if [ $has_required_label = "nop" ]; then
+        echo "...has no ${INPUT_LABEL} label skipping"
+        exit 0
     fi
 
-    title=$(echo "${issue}" | jq -r .title)
 
-    chat=$(curl -X POST \
+    echo "...done"
+    echo ""
+    echo ""
+    echo "Checking if '${INPUT_LABEL}' label was previously used..."
+
+
+    chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"⚡ Atención acción de deploy lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* ⚡\"}")
+    -d "{\"text\" : \"⚡ ${INPUT_LABEL}: Label set by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⚡\"}")
 
 
-    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:deploy+repo:${GITHUB_REPOSITORY}" \
+    issues=$(curl -s -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:${INPUT_LABEL}+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${INPUT_TOKEN}")
 
     count=$(echo "${issues}" | jq -r .total_count)
@@ -57,19 +59,28 @@ main(){
 
 
     if [ $count != "1" ]; then
-      echo "Deploy in course"
+      echo "Another branch with ${INPUT_LABEL} label is already being tested"
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
-      resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
+      resp_del=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${INPUT_LABEL}" \
       -H "Authorization: token ${INPUT_TOKEN}")
       echo ${resp_del}
 
-      chat=$(curl -X POST \
+      chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"🚫  🚫 DEPLOY PARADO: Hay otro deploy en curso. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
+    -d "{\"text\" : \"🚫  🚫 ${INPUT_LABEL}: Another branch with ${INPUT_LABEL} label is already being tested. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
       exit 1
     fi
+
+
+
+    echo "...done"
+    echo ""
+    echo ""
+    echo "Checking if branch is up to date with master..."
+
+
 
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
     
@@ -79,37 +90,34 @@ main(){
     
     revision=$(git rev-list --left-right --count origin/master...origin/${branch} | head -c 1)
 
-    echo "revision"
-    echo "$(git rev-list --left-right --count origin/master...origin/${branch})"
-    echo ${revision}
 
     if [ "$revision" != "0" ];then
-        echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
-        echo " "
-        echo "CANNOT DEPLOY YOUR BANCH IS BEHIND MASTER";
-        echo " "
-        echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
-        resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
+        echo "YOUR BANCH IS BEHIND MASTER";
+        resp_del2=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${INPUT_LABEL}" \
         -H "Authorization: token ${INPUT_TOKEN}")
-        echo ${resp_del2}
 
 
-    chat=$(curl -X POST \
-    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"🚫  🚫 DEPLOY PARADO: La rama está por detrás de master. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
+        chat=$(curl -s -X POST \
+        "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+        -H 'Content-Type: application/json' \
+        -d "{\"text\" : \"🚫  🚫 ${INPUT_LABEL}: Not up to date with master. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
 
         exit 1;
     fi
 
 
- chat=$(curl -X POST \
-    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"⭐ ⭐ DEPLOY LISTO: Tienes via libre para deployar. Lanzada por *${GITHUB_ACTOR}* en el PR *${title}* del proyecto *${GITHUB_REPOSITORY}* ⭐ ⭐\"}")
+    chat=$(curl -s -X POST \
+        "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+        -H 'Content-Type: application/json' \
+        -d "{\"text\" : \"⭐ ⭐ ${INPUT_LABEL}: You can now test your branch. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⭐ ⭐\"}")
 
-    
+
+
+    echo "...done"
+    echo ""
+    echo ""
+    echo "READY TO DEPLOY"
 }
 
 main "$@"
