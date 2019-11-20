@@ -6,14 +6,15 @@ main(){
     action=$(jq --raw-output .action ${GITHUB_EVENT_PATH})
     number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
 
-    echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
+    echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"master\"}"
     
     issue=$(curl -s -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${INPUT_TOKEN}")
+    title=$(echo "${issue}" | jq -r .title)
 
     echo ""
     echo ""
-    echo "Checking if PR has 'staging' label..."
+    echo "Checking if PR has '${INPUT_LABEL}' label..."
  
 
     labels=$(echo "${issue}" | jq -r .labels)
@@ -25,14 +26,14 @@ main(){
         }
         label_name=$(_jq '.name')
 
-        if [ $label_name = "staging" ]; then
-            echo "has staging label, we are good"
+        if [ $label_name = ${INPUT_LABEL} ]; then
+            echo "has ${INPUT_LABEL} label, we are good"
             has_required_label="yes"
         fi
     done
 
     if [ $has_required_label = "nop" ]; then
-        echo "...has no staging label skiping"
+        echo "...has no ${INPUT_LABEL} label skipping"
         exit 0
     fi
 
@@ -40,19 +41,16 @@ main(){
     echo "...done"
     echo ""
     echo ""
-    echo "Checking if 'staging' label was previously used..."
+    echo "Checking if '${INPUT_LABEL}' label was previously used..."
 
-
-
-    title=$(echo "${issue}" | jq -r .title)
 
     chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"⚡ Staging slot requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⚡\"}")
+    -d "{\"text\" : \"⚡ ${INPUT_LABEL}: Label set by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⚡\"}")
 
 
-    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:staging+repo:${GITHUB_REPOSITORY}" \
+    issues=$(curl -s -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:${INPUT_LABEL}+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${INPUT_TOKEN}")
 
     count=$(echo "${issues}" | jq -r .total_count)
@@ -61,16 +59,16 @@ main(){
 
 
     if [ $count != "1" ]; then
-      echo "Another branch is already being tested in staging"
+      echo "Another branch with ${INPUT_LABEL} label is already being tested"
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
-      resp_del=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/staging" \
+      resp_del=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${INPUT_LABEL}" \
       -H "Authorization: token ${INPUT_TOKEN}")
       echo ${resp_del}
 
       chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"🚫  🚫 STAGING: Another branch is already being tested in staging. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
+    -d "{\"text\" : \"🚫  🚫 ${INPUT_LABEL}: Another branch with ${INPUT_LABEL} label is already being tested. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
       exit 1
     fi
@@ -94,15 +92,15 @@ main(){
 
 
     if [ "$revision" != "0" ];then
-        echo "CANNOT UPDATE TO STAGING YOUR BANCH IS BEHIND MASTER";
-        resp_del2=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/staging" \
+        echo "YOUR BANCH IS BEHIND MASTER";
+        resp_del2=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${INPUT_LABEL}" \
         -H "Authorization: token ${INPUT_TOKEN}")
 
 
         chat=$(curl -s -X POST \
         "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
         -H 'Content-Type: application/json' \
-        -d "{\"text\" : \"🚫  🚫 STAGING: Not up to date with master. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
+        -d "{\"text\" : \"🚫  🚫 ${INPUT_LABEL}: Not up to date with master. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
 
 
         exit 1;
@@ -112,14 +110,14 @@ main(){
     chat=$(curl -s -X POST \
         "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
         -H 'Content-Type: application/json' \
-        -d "{\"text\" : \"⭐ ⭐ STAGING: You can now upload and test your branch. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⭐ ⭐\"}")
+        -d "{\"text\" : \"⭐ ⭐ ${INPUT_LABEL}: You can now test your branch. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⭐ ⭐\"}")
 
 
 
     echo "...done"
     echo ""
     echo ""
-    echo "READY TO MOVE TO STAGING"
+    echo "READY TO DEPLOY"
 }
 
 main "$@"
