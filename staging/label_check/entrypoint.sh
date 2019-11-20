@@ -8,7 +8,7 @@ main(){
 
     echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
     
-    issue=$(curl -X -s GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
+    issue=$(curl -s -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${INPUT_TOKEN}")
 
     echo ""
@@ -46,7 +46,7 @@ main(){
 
     title=$(echo "${issue}" | jq -r .title)
 
-    chat=$(curl -X -s POST \
+    chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"⚡ Staging slot requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⚡\"}")
@@ -63,11 +63,11 @@ main(){
     if [ $count != "1" ]; then
       echo "Another branch is already being tested in staging"
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
-      resp_del=$(curl -X -s DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/staging" \
+      resp_del=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/staging" \
       -H "Authorization: token ${INPUT_TOKEN}")
       echo ${resp_del}
 
-      chat=$(curl -X -s POST \
+      chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"🚫  🚫 STAGING: Another branch is already being tested in staging. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
@@ -95,11 +95,11 @@ main(){
 
     if [ "$revision" != "0" ];then
         echo "CANNOT UPDATE TO STAGING YOUR BANCH IS BEHIND MASTER";
-        resp_del2=$(curl -X -s DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/staging" \
+        resp_del2=$(curl -s -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/staging" \
         -H "Authorization: token ${INPUT_TOKEN}")
 
 
-        chat=$(curl -X -s POST \
+        chat=$(curl -s -X POST \
         "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
         -H 'Content-Type: application/json' \
         -d "{\"text\" : \"🚫  🚫 STAGING: Not up to date with master. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* 🚫  🚫\"}")
@@ -109,7 +109,7 @@ main(){
     fi
 
 
-    chat=$(curl -X -s POST \
+    chat=$(curl -s -X POST \
         "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
         -H 'Content-Type: application/json' \
         -d "{\"text\" : \"⭐ ⭐ STAGING: You can now upload and test your branch. Requested by *${GITHUB_ACTOR}* on PR *${title}* project *${GITHUB_REPOSITORY}* ⭐ ⭐\"}")
