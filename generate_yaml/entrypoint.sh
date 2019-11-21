@@ -29,10 +29,8 @@ main(){
 
   printenv
 
-  if [ -z "${INPUT_DEPLOY_PATH}" ]; then
-    echo $INPUT_DEPLOY_PATH
-    cd $INPUT_DEPLOY_PATH
-  fi
+  echo "${INPUT_DEPLOY_PATH}"
+  cd "$INPUT_DEPLOY_PATH"
 
   pwd
 
