@@ -8,7 +8,6 @@ main(){
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${INPUT_TOKEN}")
-  echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
   title=$(echo "${issue}" | jq -r .title)
 
   echo "-------------------------------------"
@@ -71,11 +70,8 @@ main(){
   chat=$(curl -s -X POST \
   "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
   -H 'Content-Type: application/json' \
-  -d "{\"text\" : \"⭐ DEPLOY: Starting deploy...\
+  -d "{\"text\" : \"⭐ DEPLOY: Starting deploy... \
       Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
-
-  # TODO: Remove this line that test that generates well.
-  cat app.yaml
 
   echo "READY TO DEPLOY"
 }
