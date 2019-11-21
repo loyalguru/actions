@@ -6,7 +6,7 @@ main(){
 
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${INPUT_TOKEN}")
+    -H "Authorization: token ${token}")
   title=$(echo "${issue}" | jq -r .title)
 
   echo "------------------------------------------------"
@@ -24,10 +24,12 @@ main(){
 
   echo "STEP 1 OF 1: Deploying to gcloud ..."
 
+  export PATH=$PATH:/google-cloud-sdk/bin
+
   printenv
 
-  # echo ::add-path::/google-cloud-sdk/bin/gcloud
-  # echo ::add-path::/google-cloud-sdk/bin/gsutil
+  #echo ::add-path::/google-cloud-sdk/bin/gcloud
+  #echo ::add-path::/google-cloud-sdk/bin/gsutil
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
      if [ -z "${application_credentials}" ]; then
