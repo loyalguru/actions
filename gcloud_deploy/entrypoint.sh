@@ -25,7 +25,7 @@ main(){
   echo "STEP 1 OF 1: Deploying to gcloud ..."
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
-     if [ -z "${INPUT_APPLICATION_CREDENTIALS-}" ]; then
+     if [ -z "${INPUT_APPLICATION_CREDENTIALS}" ]; then
         echo "APPLICATION_CREDENTIALS not found. Exiting...."
 
         chat=$(curl -s -X POST \
@@ -37,7 +37,7 @@ main(){
         exit 1
      fi
 
-     if [ -z "${INPUT_PROJECT_ID-}" ]; then
+     if [ -z "${INPUT_PROJECT_ID}" ]; then
         echo "PROJECT_ID not found. Exiting...."
 
         chat=$(curl -s -X POST \
