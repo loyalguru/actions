@@ -40,8 +40,9 @@ main(){
     cp -vap app_example.yaml app.yaml
 
     FILE=app.yaml
-
-        sed -i "" "s/\${{ SECRET_KEY }}/\"${INPUT_SECRET_KEY}\"/g" $FILE
+    cat $FILE
+    echo $FILE
+    sed -i "" "s#\${{ SECRET_KEY }}#\"${INPUT_SECRET_KEY}\"#g" $FILE
     sed -i "" "s#\${{ DB_FULL_URL }}#\"${INPUT_DB_FULL_URL}\"#g" $FILE
     sed -i "" "s/\${{ REDIS_CACHE_USER }}/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
     sed -i "" "s/\${{ REDIS_CACHE_PASSWORD }}/'${INPUT_REDIS_CACHE_PASSWORD}'/g" $FILE
