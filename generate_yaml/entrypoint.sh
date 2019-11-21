@@ -28,13 +28,19 @@ main(){
   
   echo "STEP 1 OF 1: Generating app.yml file..."
 
-  FILE=app_example.yml
-  if test -f "$FILE"; then
+  pwd
+
+  FILE=app_example.yaml
+
+  if [ -f "$FILE" ]; then
       ready="true"
   fi
 
   if [ "$ready" = "true" ]; then
-    cp -vap app_example.yml app.yml
+    cp -vap app_example.yml app.yaml
+
+    FILE=app.yaml
+
     sed -i "" "s/\${{ SECRET_KEY }}/\"${INPUT_SECRET_KEY}\"/g" $FILE
     sed -i "" "s/\${{ DB_FULL_URL }}/\"${INPUT_DB_FULL_URL}\"/g" $FILE
     sed -i "" "s/\${{ REDIS_CACHE_USER }}/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
@@ -69,7 +75,7 @@ main(){
       Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
 
   # TODO: Remove this line that test that generates well.
-  cat app.yml
+  cat app.yaml
 
   echo "READY TO DEPLOY"
 }
