@@ -92,4 +92,8 @@ main(){
 
     exit 1
   fi
+
+  echo "PROJECT DEPLOYED!"
 }
+
+main "$@"
