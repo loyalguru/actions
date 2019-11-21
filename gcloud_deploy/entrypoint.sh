@@ -26,10 +26,9 @@ main(){
 
   export PATH=$PATH:/google-cloud-sdk/bin
 
-  printenv
-
-  #echo ::add-path::/google-cloud-sdk/bin/gcloud
-  #echo ::add-path::/google-cloud-sdk/bin/gsutil
+  if [ -z "${deploy_path}" ]; then
+    cd $deploy_path
+  fi
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
      if [ -z "${application_credentials}" ]; then
