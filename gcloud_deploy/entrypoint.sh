@@ -9,7 +9,20 @@ main(){
     -H "Authorization: token ${INPUT_TOKEN}")
   title=$(echo "${issue}" | jq -r .title)
 
+  echo "------------------------------------------------"
+  echo "------------------------------------------------"
+  echo "||                                            ||"
+  echo "||      Deploying to Google Cloud Engine      ||"
+  echo "||                                            ||"
+  echo "------------------------------------------------"
+  echo "------------------------------------------------"
 
+  echo ""
+  echo "Started at $(date)"
+  echo ""
+  echo ""
+
+  echo "STEP 1 OF 1: Deploying to gcloud ..."
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
      if [ -z "${INPUT_APPLICATION_CREDENTIALS-}" ]; then
@@ -56,7 +69,7 @@ main(){
   status=$?
 
   if [ $status -eq 0 ]; then
-    echo "...done"
+    echo "...done!"
     echo ""
     echo ""
 

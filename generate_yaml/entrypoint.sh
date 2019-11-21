@@ -27,8 +27,6 @@ main(){
   
   echo "STEP 1 OF 1: Generating app.yaml file..."
 
-  pwd
-
   FILE=app_example.yaml
 
   if [ -f "$FILE" ]; then
