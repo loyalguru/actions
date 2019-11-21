@@ -27,12 +27,7 @@ main(){
   
   echo "STEP 1 OF 1: Generating app.yaml file..."
 
-  printenv
-
-  echo "${INPUT_DEPLOY_PATH}"
   cd "$INPUT_DEPLOY_PATH"
-
-  pwd
 
   FILE=app_example.yaml
 

@@ -26,9 +26,7 @@ main(){
 
   export PATH=$PATH:/google-cloud-sdk/bin
 
-  if [ -z "${INPUT_DEPLOY_PATH}" ]; then
-    cd $INPUT_DEPLOY_PATH
-  fi
+  cd "$INPUT_DEPLOY_PATH"
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
      if [ -z "${INPUT_APPLICATION_CREDENTIALS}" ]; then
