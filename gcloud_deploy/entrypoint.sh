@@ -6,7 +6,7 @@ main(){
 
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${token}")
+    -H "Authorization: token ${INPUT_TOKEN}")
   title=$(echo "${issue}" | jq -r .title)
 
   echo "------------------------------------------------"
@@ -26,16 +26,16 @@ main(){
 
   export PATH=$PATH:/google-cloud-sdk/bin
 
-  if [ -z "${deploy_path}" ]; then
-    cd $deploy_path
+  if [ -z "${INPUT_DEPLOY_PATH}" ]; then
+    cd $INPUT_DEPLOY_PATH
   fi
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
-     if [ -z "${application_credentials}" ]; then
+     if [ -z "${INPUT_APPLICATION_CREDENTIALS}" ]; then
         echo "APPLICATION_CREDENTIALS not found. Exiting...."
 
         chat=$(curl -s -X POST \
-        "https://chat.googleapis.com/v1/spaces/${space}/messages?key=${ckey}&token=${ctoken}" \
+        "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
         -H 'Content-Type: application/json' \
         -d "{\"text\" : \"🚫 DEPLOY: Deploy action failed. 🛂 APPLICATION_CREDENTIALS not found. Exiting.... \
             Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
@@ -43,11 +43,11 @@ main(){
         exit 1
      fi
 
-     if [ -z "${project_id}" ]; then
+     if [ -z "${INPUT_PROJECT_ID}" ]; then
         echo "PROJECT_ID not found. Exiting...."
 
         chat=$(curl -s -X POST \
-        "https://chat.googleapis.com/v1/spaces/${space}/messages?key=${ckey}&token=${ctoken}" \
+        "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
         -H 'Content-Type: application/json' \
         -d "{\"text\" : \"🚫 DEPLOY: Deploy action failed. 🛂 PROJECT_ID not found. Exiting.... \
             Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
@@ -55,14 +55,14 @@ main(){
         exit 1
      fi
 
-     echo "$application_credentials" | base64 -d > /tmp/account.json
+     echo "${INPUT_APPLICATION_CREDENTIALS}" | base64 -d > /tmp/account.json
 
      gcloud auth activate-service-account --key-file=/tmp/account.json
-     gcloud config set project "$project_id"
+     gcloud config set project "$INPUT_PROJECT_ID"
   fi
 
   chat=$(curl -s -X POST \
-    "https://chat.googleapis.com/v1/spaces/${space}/messages?key=${ckey}&token=${ctoken}" \
+    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"🔄 DEPLOY: Starting deploy... \
         Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
@@ -77,7 +77,7 @@ main(){
     echo ""
 
     chat=$(curl -s -X POST \
-    "https://chat.googleapis.com/v1/spaces/${space}/messages?key=${ckey}&token=${ctoken}" \
+    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
     -d "{\"text\" : \"✅ DEPLOY: Deploy action finished succeed! 🎉🎉 \
         Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
@@ -88,7 +88,7 @@ main(){
     echo ""
 
     chat=$(curl -s -X POST \
-      "https://chat.googleapis.com/v1/spaces/${space}/messages?key=${ckey}&token=${ctoken}" \
+      "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
       -H 'Content-Type: application/json' \
       -d "{\"text\" : \"🚫 DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors. \
           Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")

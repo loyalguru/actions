@@ -27,8 +27,8 @@ main(){
   
   echo "STEP 1 OF 1: Generating app.yaml file..."
 
-  if [ -z "${deploy_path}" ]; then
-    cd $deploy_path
+  if [ -z "${INPUT_DEPLOY_PATH}" ]; then
+    cd $INPUT_DEPLOY_PATH
   fi
 
   FILE=app_example.yaml
