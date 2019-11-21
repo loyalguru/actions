@@ -26,8 +26,8 @@ main(){
 
   printenv
 
-  echo ::add-path::/google-cloud-sdk/bin/gcloud
-  echo ::add-path::/google-cloud-sdk/bin/gsutil
+  # echo ::add-path::/google-cloud-sdk/bin/gcloud
+  # echo ::add-path::/google-cloud-sdk/bin/gsutil
 
   if [ ! -d "$HOME/.config/gcloud" ]; then
      if [ -z "${application_credentials}" ]; then

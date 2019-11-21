@@ -8,6 +8,8 @@ RUN	apk add --no-cache \
 	jq \
 	coreutils
 
+ENV PATH="${PATH}:/google-cloud-sdk/bin"
+
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
