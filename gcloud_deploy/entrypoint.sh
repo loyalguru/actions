@@ -9,8 +9,10 @@ main(){
     -H "Authorization: token ${INPUT_TOKEN}")
   title=$(echo "${issue}" | jq -r .title)
 
+
+
   if [ ! -d "$HOME/.config/gcloud" ]; then
-     if [ -z "${APPLICATION_CREDENTIALS-}" ]; then
+     if [ -z "${INPUT_APPLICATION_CREDENTIALS-}" ]; then
         echo "APPLICATION_CREDENTIALS not found. Exiting...."
 
         chat=$(curl -s -X POST \
@@ -22,7 +24,7 @@ main(){
         exit 1
      fi
 
-     if [ -z "${PROJECT_ID-}" ]; then
+     if [ -z "${INPUT_PROJECT_ID-}" ]; then
         echo "PROJECT_ID not found. Exiting...."
 
         chat=$(curl -s -X POST \
@@ -34,10 +36,10 @@ main(){
         exit 1
      fi
 
-     echo "$APPLICATION_CREDENTIALS" | base64 -d > /tmp/account.json
+     echo "$INPUT_APPLICATION_CREDENTIALS" | base64 -d > /tmp/account.json
 
      gcloud auth activate-service-account --key-file=/tmp/account.json
-     gcloud config set project "$PROJECT_ID"
+     gcloud config set project "$INPUT_PROJECT_ID"
   fi
 
   echo ::add-path::/google-cloud-sdk/bin/gcloud
