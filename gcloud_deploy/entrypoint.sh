@@ -22,13 +22,7 @@ main(){
   echo ""
   echo ""
 
-  echo "STEP 1 OF 2: Installing dependencies ..."
-
-  curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
-  dep ensure
-
-  echo "STEP 2 OF 2: Deploying to gcloud ..."
+  echo "STEP 1 OF 1: Deploying to gcloud ..."
 
   export PATH=$PATH:/google-cloud-sdk/bin
 
