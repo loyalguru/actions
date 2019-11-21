@@ -41,17 +41,18 @@ main(){
 
     FILE=app.yaml
 
-    sed -i "" "s/\${{ SECRET_KEY }}/\"${INPUT_SECRET_KEY}\"/g" $FILE
-    sed -i "" "s/\${{ DB_FULL_URL }}/\"${INPUT_DB_FULL_URL}\"/g" $FILE
+        sed -i "" "s/\${{ SECRET_KEY }}/\"${INPUT_SECRET_KEY}\"/g" $FILE
+    sed -i "" "s#\${{ DB_FULL_URL }}#\"${INPUT_DB_FULL_URL}\"#g" $FILE
     sed -i "" "s/\${{ REDIS_CACHE_USER }}/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
     sed -i "" "s/\${{ REDIS_CACHE_PASSWORD }}/'${INPUT_REDIS_CACHE_PASSWORD}'/g" $FILE
     sed -i "" "s/\${{ REDIS_SIDEKIQ_USER }}/'${REDIS_SIDEKIQ_USER}'/g" $FILE
     sed -i "" "s/\${{ REDIS_SIDEKIQ_PASSWORD }}/'${REDIS_SIDEKIQ_PASSWORD}'/g" $FILE
-    sed -i "" "s/\${{ AWS_ACCESS_KEY_ID }}/'${INPUT_AWS_ACCESS_KEY_ID}'/g" $FILE
+    sed -i "" "s#\${{ AWS_ACCESS_KEY_ID }}#'${INPUT_AWS_ACCESS_KEY_ID}'#g" $FILE
     sed -i "" "s/\${{ AWS_SECRET_ACCESS_KEY }}/'${INPUT_AWS_SECRET_ACCESS_KEY}'/g" $FILE
     sed -i "" "s/\${{ DATADOG_API_KEY }}/'${INPUT_DATADOG_API_KEY}'/g" $FILE
-    sed -i "" "s/\${{ SENTRY_DSN }}/'${INPUT_SENTRY_DSN}'/g" $FILE
-    sed -i "" "s/\${{ GOOGLE_PUBSUB_CREDENTIALS }}/'${GOOGLE_PUBSUB_CREDENTIALS}'/g" $FILE
+    sed -i "" "s#\${{ SENTRY_DSN }}#\'${INPUT_SENTRY_DSN}'#g" $FILE
+    PUBSUBCREDENTIALS=$(echo $INPUT_GOOGLE_PUBSUB_CREDENTIALS | base64 -d)
+    echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
   else
     echo "${FILE} file don't exist."
 
