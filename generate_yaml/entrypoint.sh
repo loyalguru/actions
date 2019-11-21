@@ -24,9 +24,9 @@ main(){
   echo ""
   echo ""
 
-  # Generate app.yml file
+  # Generate app.yaml file
   
-  echo "STEP 1 OF 1: Generating app.yml file..."
+  echo "STEP 1 OF 1: Generating app.yaml file..."
 
   pwd
 
@@ -37,7 +37,7 @@ main(){
   fi
 
   if [ "$ready" = "true" ]; then
-    cp -vap app_example.yml app.yaml
+    cp -vap app_example.yaml app.yaml
 
     FILE=app.yaml
 
