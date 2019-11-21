@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -l
 
 set -e
 
@@ -24,10 +24,38 @@ main(){
 
   echo "STEP 1 OF 1: Deploying to gcloud ..."
 
-  echo "$INPUT_APPLICATION_CREDENTIALS" | base64 -d > /tmp/account.json
+  printenv
 
-  gcloud auth activate-service-account --key-file=/tmp/account.json
-  gcloud config set project "$INPUT_PROJECT_ID"
+  if [ ! -d "$HOME/.config/gcloud" ]; then
+     if [ -z "${INPUT_APPLICATION_CREDENTIALS}" ]; then
+        echo "APPLICATION_CREDENTIALS not found. Exiting...."
+
+        chat=$(curl -s -X POST \
+        "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+        -H 'Content-Type: application/json' \
+        -d "{\"text\" : \"🚫 DEPLOY: Deploy action failed. 🛂 APPLICATION_CREDENTIALS not found. Exiting.... \
+            Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+
+        exit 1
+     fi
+
+     if [ -z "${INPUT_PROJECT_ID}" ]; then
+        echo "PROJECT_ID not found. Exiting...."
+
+        chat=$(curl -s -X POST \
+        "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+        -H 'Content-Type: application/json' \
+        -d "{\"text\" : \"🚫 DEPLOY: Deploy action failed. 🛂 PROJECT_ID not found. Exiting.... \
+            Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+
+        exit 1
+     fi
+
+     echo "$INPUT_APPLICATION_CREDENTIALS" | base64 -d > /tmp/account.json
+
+     gcloud auth activate-service-account --key-file=/tmp/account.json
+     gcloud config set project "$INPUT_PROJECT_ID"
+  fi
 
   echo ::add-path::/google-cloud-sdk/bin/gcloud
   echo ::add-path::/google-cloud-sdk/bin/gsutil
