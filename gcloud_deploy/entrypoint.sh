@@ -26,6 +26,9 @@ main(){
 
   printenv
 
+  echo ::add-path::/google-cloud-sdk/bin/gcloud
+  echo ::add-path::/google-cloud-sdk/bin/gsutil
+
   if [ ! -d "$HOME/.config/gcloud" ]; then
      if [ -z "${application_credentials}" ]; then
         echo "APPLICATION_CREDENTIALS not found. Exiting...."
@@ -56,9 +59,6 @@ main(){
      gcloud auth activate-service-account --key-file=/tmp/account.json
      gcloud config set project "$project_id"
   fi
-
-  echo ::add-path::/google-cloud-sdk/bin/gcloud
-  echo ::add-path::/google-cloud-sdk/bin/gsutil
 
   chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${space}/messages?key=${ckey}&token=${ctoken}" \
