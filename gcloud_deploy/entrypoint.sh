@@ -68,7 +68,7 @@ main(){
     -d "{\"text\" : \"🔄 DEPLOY: Starting deploy... \
         Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
 
-  command="gcloud app deploy --quiet app.yaml"
+  command="gcloud app deploy app.yaml --quiet"
   sh -c "$command"
   status=$?
 
