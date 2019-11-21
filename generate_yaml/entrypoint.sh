@@ -3,9 +3,7 @@
 set -e
 
 main(){
-
   ready="false"
-  token=$INPUT_RAILSTOKEN
   
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
@@ -32,7 +30,7 @@ main(){
 
   FILE=app_example.yml
   if test -f "$FILE"; then
-      ready = "true"
+      ready="true"
   fi
 
   if [ "$ready" = "true" ]; then
@@ -69,6 +67,9 @@ main(){
   -H 'Content-Type: application/json' \
   -d "{\"text\" : \"⭐ DEPLOY: Starting deploy...\
       Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
+
+  # TODO: Remove this line that test that generates well.
+  cat app.yml
 
   echo "READY TO DEPLOY"
 }
