@@ -41,16 +41,16 @@ main(){
 
     FILE=./app.yaml
 
-    sed -i -e "s#@{{ SECRET_KEY }}#\"$INPUT_SECRET_KEY\"#g" $FILE
-    sed -i -e "s#@{{ DB_FULL_URL }}#\"$INPUT_DB_FULL_URL\"#g" $FILE
-    sed -i -e "s/@{{ REDIS_CACHE_USER }}/'$INPUT_REDIS_CACHE_USER'/g" $FILE
-    sed -i -e "s/@{{ REDIS_CACHE_PASSWORD }}/'$INPUT_REDIS_CACHE_PASSWORD'/g" $FILE
-    sed -i -e "s/@{{ REDIS_SIDEKIQ_USER }}/'$REDIS_SIDEKIQ_USER'/g" $FILE
-    sed -i -e "s/@{{ REDIS_SIDEKIQ_PASSWORD }}/'$REDIS_SIDEKIQ_PASSWORD'/g" $FILE
-    sed -i -e "s#@{{ AWS_ACCESS_KEY_ID }}#'$INPUT_AWS_ACCESS_KEY_ID'#g" $FILE
-    sed -i -e "s/@{{ AWS_SECRET_ACCESS_KEY }}/'$INPUT_AWS_SECRET_ACCESS_KEY'/g" $FILE
-    sed -i -e "s/@{{ DATADOG_API_KEY }}/'$INPUT_DATADOG_API_KEY'/g" $FILE
-    sed -i -e "s#@{{ SENTRY_DSN }}#\'$INPUT_SENTRY_DSN'#g" $FILE
+    sed -i -e "s#@{{ SECRET_KEY }}#\"${INPUT_SECRET_KEY}\"#g" $FILE
+    sed -i -e "s#@{{ DB_FULL_URL }}#\"${INPUT_DB_FULL_URL}\"#g" $FILE
+    sed -i -e "s/@{{ REDIS_CACHE_USER }}/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
+    sed -i -e "s/@{{ REDIS_CACHE_PASSWORD }}/'${INPUT_REDIS_CACHE_PASSWORD}'/g" $FILE
+    sed -i -e "s/@{{ REDIS_SIDEKIQ_USER }}/'${INPUT_REDIS_SIDEKIQ_USER}'/g" $FILE
+    sed -i -e "s/@{{ REDIS_SIDEKIQ_PASSWORD }}/'${INPUT_REDIS_SIDEKIQ_PASSWORD}'/g" $FILE
+    sed -i -e "s#@{{ AWS_ACCESS_KEY_ID }}#'${INPUT_AWS_ACCESS_KEY_ID}'#g" $FILE
+    sed -i -e "s/@{{ AWS_SECRET_ACCESS_KEY }}/'${INPUT_AWS_SECRET_ACCESS_KEY}'/g" $FILE
+    sed -i -e "s/@{{ DATADOG_API_KEY }}/'${INPUT_DATADOG_API_KEY}'/g" $FILE
+    sed -i -e "s#@{{ SENTRY_DSN }}#\'${INPUT_SENTRY_DSN}'#g" $FILE
     PUBSUBCREDENTIALS=$(echo "$INPUT_GOOGLE_PUBSUB_CREDENTIALS" | base64 -d)
     echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
   else
