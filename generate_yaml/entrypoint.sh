@@ -27,6 +27,8 @@ main(){
   
   echo "STEP 1 OF 1: Generating app.yaml file..."
 
+  printenv
+
   if [ -z "${INPUT_DEPLOY_PATH}" ]; then
     echo $INPUT_DEPLOY_PATH
     cd $INPUT_DEPLOY_PATH
