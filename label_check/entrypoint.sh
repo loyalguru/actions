@@ -32,12 +32,12 @@ main(){
     number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
 
     echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
-    echo "Checking labels ${GITHUB_REPOSITORY}"
+    echo "checking labels ${GITHUB_REPOSITORY}"
     
     issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${TOKEN}")
+    -H "Authorization: token ${INPUT_TOKEN}")
 
-    echo "Check done!"
+    echo "check done"
 
     echo ${issue}
  
@@ -57,13 +57,12 @@ main(){
         if [ $label_name = "deploy" ]; then
             echo "has deploy label, we are good"
             has_deploy_label="yes"
-            echo "::set-env name=ACTION::deploy"
         fi
     done
 
     if [ $has_deploy_label = "nop" ]; then
         echo "has no deploy label skiping"
-        exit 0
+        exit 1
     fi
 
     message="LABEL CHECK: Attention!! New deploy action launched."
@@ -71,7 +70,8 @@ main(){
     send_chat_message "$type \"$message\""
 
     issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:deploy+repo:${GITHUB_REPOSITORY}" \
-    -H "Authorization: token ${TOKEN}")
+    -H "Authorization: token ${INPUT_TOKEN}")
+
     count=$(echo "${issues}" | jq -r .total_count)
 
     echo ${issues}
@@ -81,7 +81,7 @@ main(){
       echo "Deploy in course"
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
       resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
-      -H "Authorization: token ${TOKEN}")
+      -H "Authorization: token ${INPUT_TOKEN}")
       echo ${resp_del}
 
       message="LABEL CHECK: There are another deploy in course."
@@ -93,7 +93,7 @@ main(){
 
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
     
-    git config remote.origin.url "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+    git config remote.origin.url "https://${GITHUB_ACTOR}:${INPUT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
     git fetch 
     
@@ -110,7 +110,7 @@ main(){
         echo " "
         echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
         resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
-        -H "Authorization: token ${TOKEN}")
+        -H "Authorization: token ${INPUT_TOKEN}")
         echo ${resp_del2}
 
         message="LABEL CHECK: Deplot stopped! Your branch is behind master."
