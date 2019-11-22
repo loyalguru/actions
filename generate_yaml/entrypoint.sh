@@ -1,5 +1,30 @@
 #!/bin/sh -l
 
+send_chat_message()
+{
+  chat_path="/chat.sh"
+
+  type=$1
+  message=$2
+
+  sh -c "$chat_path $type \"$message\""
+}
+
+abort()
+{
+    echo "...error!"
+    echo ""
+    echo ""
+
+    message="DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    type="failed"
+    send_chat_message "$type \"$message\""
+
+    exit 1
+}
+
+trap 'abort' 0
+
 set -e
 
 main(){
@@ -9,11 +34,6 @@ main(){
   if [ -z "${DEPLOY_ENVIRONMENT}" ] && [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
     is_staging="false"
   fi
-
-  number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
-  issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${INPUT_TOKEN}")
-  title=$(echo "${issue}" | jq -r .title)
 
   echo "-------------------------------------"
   echo "-------------------------------------"
@@ -67,11 +87,9 @@ main(){
   else
     echo "${FILE} file don't exist."
 
-    chat=$(curl -s -X POST \
-    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"🚫 GENERATE YAML: failed to generate the file, ${FILE} file don't exist. \
-        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+    message="GENERATE YAML: failed to generate the file, ${FILE} file don't exist."
+    type="failed"
+    send_chat_message "$type \"$message\""
 
     exit 1
   fi
@@ -80,13 +98,14 @@ main(){
   echo ""
   echo ""
 
-  chat=$(curl -s -X POST \
-  "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-  -H 'Content-Type: application/json' \
-  -d "{\"text\" : \"👍 GENERATE YAML: YAML file generation finished succeed. Starting deploy action... \
-      Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 👍\"}")
+  message="GENERATE YAML: YAML file generation finished succeed. Starting deploy action..."
+  type="thumbs"
+  send_chat_message "$type \"$message\""
 
-  echo "READY TO DEPLOY"
 }
 
 main "$@"
+
+trap : 0
+
+echo "READY TO DEPLOY"

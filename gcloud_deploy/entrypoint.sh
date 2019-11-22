@@ -77,8 +77,6 @@ main(){
   type="loading"
   send_chat_message "$type \"$message\""
 
-  dghdfgh fbg
-
   command="gcloud app deploy app.yaml --quiet --no-promote"
   sh -c "$command"
 
