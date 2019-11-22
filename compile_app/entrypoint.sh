@@ -26,12 +26,9 @@ main(){
 
   DIR=src/github.com/$GITHUB_REPOSITORY
 
-  apk update && apk add --no-cache git;\
-    go get -u \
-    github.com/golang/dep/cmd/dep \
-    gopkg.in/src-d/go-kallax.v1/...;\
-    go install gopkg.in/src-d/go-kallax.v1/;\
-    cp $GOPATH/bin/kallax /bin/kallax
+  go get -u github.com/golang/dep/cmd/dep gopkg.in/src-d/go-kallax.v1/...
+  go install gopkg.in/src-d/go-kallax.v1/
+  cp "$GOPATH/bin/kallax" /bin/kallax
 
   cd "$GOPATH/$DIR"
 
