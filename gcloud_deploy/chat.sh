@@ -29,7 +29,7 @@ main(){
 
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${INPUT_TOKEN}")
+    -H "Authorization: token ${TOKEN}")
   title=$(echo "${issue}" | jq -r .title)
 
   chat=$(curl -s -X POST \
