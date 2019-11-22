@@ -7,7 +7,7 @@ send_chat_message()
   type=$1
   message=$2
 
-  sh -c "$chat_path $type $message"
+  sh -c "$chat_path $type \"$message\""
 }
 
 abort()
@@ -18,7 +18,7 @@ abort()
 
     message="DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
-    send_chat_message "$type $message"
+    send_chat_message "$type \"$message\""
 
     exit 1
 }
@@ -42,8 +42,6 @@ main(){
   echo ""
   echo ""
 
-  trap : 0
-
   echo "STEP 1 OF 1: Deploying to gcloud ..."
 
   export PATH=$PATH:/google-cloud-sdk/bin
@@ -54,7 +52,7 @@ main(){
 
         message="DEPLOY: Deploy action failed. 🛂 APPLICATION_CREDENTIALS not found. Exiting...."
         type="failed"
-        send_chat_message "$type $message"
+        send_chat_message "$type \"$message\""
 
         exit 1
      fi
@@ -64,7 +62,7 @@ main(){
 
         message="DEPLOY: Deploy action failed. 🛂 PROJECT_ID not found. Exiting...."
         type="failed"
-        send_chat_message "$type $message"
+        send_chat_message "$type \"$message\""
 
         exit 1
      fi
@@ -77,7 +75,7 @@ main(){
 
   message="DEPLOY: Starting deployment to Google Cloud..."
   type="loading"
-  send_chat_message "$type $message"
+  send_chat_message "$type \"$message\""
 
   dghdfgh fbg
 
@@ -90,9 +88,11 @@ main(){
 
   message="DEPLOY: Deploy action finished succeed! 🎉🎉"
   type="success"
-  send_chat_message "$type $message"
-
-  echo "PROJECT DEPLOYED!"
+  send_chat_message "$type \"$message\""
 }
 
 main "$@"
+
+trap : 0
+
+echo "PROJECT DEPLOYED!"
