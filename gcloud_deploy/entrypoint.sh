@@ -42,6 +42,8 @@ main(){
   echo ""
   echo ""
 
+  trap : 0
+
   echo "STEP 1 OF 1: Deploying to gcloud ..."
 
   export PATH=$PATH:/google-cloud-sdk/bin
@@ -72,11 +74,12 @@ main(){
      gcloud auth activate-service-account --key-file=/tmp/account.json
      gcloud config set project "$INPUT_PROJECT_ID"
   fi
-  dghdfgh fbg
 
   message="DEPLOY: Starting deployment to Google Cloud..."
   type="loading"
   send_chat_message "$type $message"
+
+  dghdfgh fbg
 
   command="gcloud app deploy app.yaml --quiet --no-promote"
   sh -c "$command"
@@ -91,7 +94,5 @@ main(){
 
   echo "PROJECT DEPLOYED!"
 }
-
-trap : 0
 
 main "$@"
