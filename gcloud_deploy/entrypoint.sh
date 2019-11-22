@@ -18,7 +18,6 @@ abort()
 
     message="DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
-
     send_chat_message "$type $message"
 
     exit 1
