@@ -9,6 +9,7 @@ RUN	apk add --no-cache \
 	coreutils
 
 ADD chat.sh /chat.sh
+RUN chmod +x /chat.sh
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
