@@ -70,7 +70,7 @@ main(){
   chat=$(curl -s -X POST \
   "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
   -H 'Content-Type: application/json' \
-  -d "{\"text\" : \"⭐ DEPLOY: Starting deploy... \
+  -d "{\"text\" : \"👍 GENERATE YAML: YAML file generation finished succeed. Starting deploy action... \
       Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
 
   echo "READY TO DEPLOY"

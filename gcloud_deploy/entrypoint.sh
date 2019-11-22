@@ -1,5 +1,22 @@
 #!/bin/sh -l
 
+abort()
+{
+    echo "...error!"
+    echo ""
+    echo ""
+
+    chat=$(curl -s -X POST \
+      "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
+      -H 'Content-Type: application/json' \
+      -d "{\"text\" : \"🚫 DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors. \
+          Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+
+    exit 1
+}
+
+trap 'abort' 0
+
 set -e
 
 main(){
@@ -58,7 +75,7 @@ main(){
      gcloud auth activate-service-account --key-file=/tmp/account.json
      gcloud config set project "$INPUT_PROJECT_ID"
   fi
-
+  dghdfgh fbg
   chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
@@ -77,7 +94,7 @@ main(){
     chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
     -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"✅ DEPLOY: Deploy action finished succeed! 🎉🎉 \
+    -d "{\"text\" : \"✔ DEPLOY: Deploy action finished succeed! 🎉🎉 \
         Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
 
   else
@@ -96,5 +113,7 @@ main(){
 
   echo "PROJECT DEPLOYED!"
 }
+
+trap : 0
 
 main "$@"
