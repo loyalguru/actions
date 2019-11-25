@@ -63,7 +63,7 @@ main(){
 
     if [ $has_deploy_label = "nop" ]; then
         echo "has no deploy label skiping"
-        exit 1
+        exit 0
     fi
 
     message="*LABEL CHECK*: Attention!! New deploy action launched."
