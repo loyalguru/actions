@@ -33,8 +33,6 @@ main(){
 
     echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
     echo "checking labels ${GITHUB_REPOSITORY}"
-
-    printenv
     
     issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${TOKEN}")
@@ -77,7 +75,6 @@ main(){
     count=$(echo "${issues}" | jq -r .total_count)
 
     echo ${issues}
-
 
     if [ $count != "1" ]; then
       echo "Deploy in course"

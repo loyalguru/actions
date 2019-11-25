@@ -53,7 +53,9 @@ main(){
   echo "STEP 1 OF 1: Generating app.yaml file..."
 
   FILE=app_example.yaml
+  deploy_environment="Production"
   if [ "$is_staging" = "true" ]; then
+    deploy_environment="Staging"
     FILE=app_example_staging.yaml
   fi
 
@@ -98,7 +100,7 @@ main(){
   echo ""
   echo ""
 
-  message="GENERATE YAML: YAML file generation finished succeed. Starting deploy action..."
+  message="GENERATE YAML: YAML file generation finished succeed. Starting deploy action to *$deploy_environment*..."
   type="thumbs"
   send_chat_message "$type \"$message\""
 
