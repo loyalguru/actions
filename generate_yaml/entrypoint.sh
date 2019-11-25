@@ -31,7 +31,7 @@ main(){
   is_staging="true"
   ready="false"
 
-  if [ -z "${DEPLOY_ENVIRONMENT}" ] && [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
+  if [ ! -z "${DEPLOY_ENVIRONMENT}" ] && [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
     is_staging="false"
   fi
 
