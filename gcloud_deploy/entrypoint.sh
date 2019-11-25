@@ -70,6 +70,7 @@ main(){
      echo "${INPUT_APPLICATION_CREDENTIALS}" | base64 -d > /tmp/account.json
 
      gcloud auth activate-service-account --key-file=/tmp/account.json
+     echo "This is the project: $INPUT_PROJECT_ID"
      gcloud config set project "$INPUT_PROJECT_ID"
   fi
 
