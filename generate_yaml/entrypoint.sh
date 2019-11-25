@@ -83,8 +83,10 @@ main(){
     sed -i -e "s#@AWS_SECRET_ACCESS_KEY@#'${INPUT_AWS_SECRET_ACCESS_KEY}'#g" $FILE
     sed -i -e "s/@DATADOG_API_KEY@/'${INPUT_DATADOG_API_KEY}'/g" $FILE
     sed -i -e "s#@SENTRY_DSN@#\'${INPUT_SENTRY_DSN}'#g" $FILE
-    PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
-    echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
+    if [ ! -z "${google_pub_sub_credentials}" ]; then
+      PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
+      echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
+    fi
 
     mv $FILE app.yaml
   else
