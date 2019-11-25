@@ -44,6 +44,7 @@ main(){
     labels=$(echo "${issue}" | jq -r .labels)
 
     has_deploy_label="nop"
+    label_to_check=""
 
     echo "${labels}"
     
@@ -53,8 +54,15 @@ main(){
             echo "${row}" | base64 --decode | jq -r "${1}"
         }
         label_name=$(_jq '.name')
+        label_to_check=$label_name
 
         if [ "$label_name" = "deploy" ]; then
+            echo "has deploy label, we are good"
+            has_deploy_label="yes"
+            echo "::set-env name=DEPLOY_ENVIRONMENT::production"
+        fi
+
+        if [ "$label_name" = "deploy_staging" ]; then
             echo "has deploy label, we are good"
             has_deploy_label="yes"
             echo "::set-env name=DEPLOY_ENVIRONMENT::staging"
@@ -73,7 +81,8 @@ main(){
     type="action"
     send_chat_message "$type \"$message\""
 
-    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:deploy+repo:${GITHUB_REPOSITORY}" \
+    # Check if another PR has deploy or deploy_staging label
+    issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:$label_to_check+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${TOKEN}")
 
     count=$(echo "${issues}" | jq -r .total_count)
@@ -83,7 +92,7 @@ main(){
     if [ $count != "1" ]; then
       echo "Deploy in course"
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
-      resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
+      resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/$label_to_check" \
       -H "Authorization: token ${TOKEN}")
       echo ${resp_del}
 
