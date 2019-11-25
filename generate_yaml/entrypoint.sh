@@ -31,6 +31,7 @@ main(){
   is_staging="true"
   ready="false"
 
+  echo "Deploy to: $DEPLOY_ENVIRONMENT"
   if [ -z "${DEPLOY_ENVIRONMENT}" ] && [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
     is_staging="false"
   fi
@@ -53,9 +54,9 @@ main(){
   echo "STEP 1 OF 1: Generating app.yaml file..."
 
   FILE=app_example.yaml
-  deploy_environment="Production"
+  deploy_env="Production"
   if [ "$is_staging" = "true" ]; then
-    deploy_environment="Staging"
+    deploy_env="Staging"
     FILE=app_example_staging.yaml
   fi
 
@@ -100,7 +101,7 @@ main(){
   echo ""
   echo ""
 
-  message="*GENERATE YAML*: YAML file generation finished succeed. Starting deploy action to *$deploy_environment*..."
+  message="*GENERATE YAML*: YAML file generation finished succeed. Starting deploy action to *$deploy_env*..."
   type="thumbs"
   send_chat_message "$type \"$message\""
 
