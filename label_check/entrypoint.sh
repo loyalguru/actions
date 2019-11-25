@@ -63,6 +63,9 @@ main(){
 
     if [ $has_deploy_label = "nop" ]; then
         echo "has no deploy label skiping"
+
+        trap : 0
+
         exit 0
     fi
 
