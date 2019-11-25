@@ -57,6 +57,7 @@ main(){
         if [ $label_name = "deploy" ]; then
             echo "has deploy label, we are good"
             has_deploy_label="yes"
+            DEPLOY_ENVIRONMENT="staging"
         fi
     done
 
