@@ -39,22 +39,22 @@ main(){
 
     echo "check done"
 
-    echo ${issue}
+    echo "${issue}"
  
     labels=$(echo "${issue}" | jq -r .labels)
 
     has_deploy_label="nop"
 
-    echo ${labels}
+    echo "${labels}"
     
     # Reading labels
     for row in $(echo "${labels}" | jq -r '.[] | @base64'); do
         _jq() {
-            echo ${row} | base64 --decode | jq -r ${1}
+            echo "${row}" | base64 --decode | jq -r "${1}"
         }
         label_name=$(_jq '.name')
 
-        if [ $label_name = "deploy" ]; then
+        if [ "$label_name" = "deploy" ]; then
             echo "has deploy label, we are good"
             has_deploy_label="yes"
             echo "::set-env name=DEPLOY_ENVIRONMENT::staging"
