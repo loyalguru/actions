@@ -16,7 +16,7 @@ abort()
     echo ""
     echo ""
 
-    message="DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    message="*GENERATE YAML*: YAML file generation failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
     send_chat_message "$type \"$message\""
 
@@ -89,7 +89,7 @@ main(){
   else
     echo "${FILE} file don't exist."
 
-    message="GENERATE YAML: failed to generate the file, ${FILE} file don't exist."
+    message="*GENERATE YAML*: failed to generate the file, ${FILE} file don't exist."
     type="failed"
     send_chat_message "$type \"$message\""
 
@@ -100,7 +100,7 @@ main(){
   echo ""
   echo ""
 
-  message="GENERATE YAML: YAML file generation finished succeed. Starting deploy action to *$deploy_environment*..."
+  message="*GENERATE YAML*: YAML file generation finished succeed. Starting deploy action to *$deploy_environment*..."
   type="thumbs"
   send_chat_message "$type \"$message\""
 

@@ -16,7 +16,7 @@ abort()
     echo ""
     echo ""
 
-    message="LABEL CHECK: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    message="*LABEL CHECK*: Label check failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
     send_chat_message "$type \"$message\""
 
@@ -65,7 +65,7 @@ main(){
         exit 1
     fi
 
-    message="LABEL CHECK: Attention!! New deploy action launched."
+    message="*LABEL CHECK*: Attention!! New deploy action launched."
     type="action"
     send_chat_message "$type \"$message\""
 
@@ -83,7 +83,7 @@ main(){
       -H "Authorization: token ${TOKEN}")
       echo ${resp_del}
 
-      message="LABEL CHECK: There are another deploy in course."
+      message="*LABEL CHECK*: There are another deploy in course."
       type="failed"
       send_chat_message "$type \"$message\""
 
@@ -112,14 +112,14 @@ main(){
         -H "Authorization: token ${TOKEN}")
         echo ${resp_del2}
 
-        message="LABEL CHECK: Deplot stopped! Your branch is behind master."
+        message="*LABEL CHECK*: Deplot stopped! Your branch is behind master."
         type="failed"
         send_chat_message "$type \"$message\""
 
         exit 1;
     fi
 
-    message="LABEL CHECK: You have free way to deploy."
+    message="*LABEL CHECK*: You have free way to deploy."
     type="stars"
     send_chat_message "$type \"$message\""
 }

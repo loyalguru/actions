@@ -16,7 +16,7 @@ abort()
     echo ""
     echo ""
 
-    message="DEPLOY: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    message="*DEPLOY*: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
     send_chat_message "$type \"$message\""
 
@@ -50,7 +50,7 @@ main(){
      if [ -z "${INPUT_APPLICATION_CREDENTIALS}" ]; then
         echo "APPLICATION_CREDENTIALS not found. Exiting...."
 
-        message="DEPLOY: Deploy action failed. 🛂 APPLICATION_CREDENTIALS not found. Exiting...."
+        message="*DEPLOY*: Deploy action failed. 🛂 APPLICATION_CREDENTIALS not found. Exiting...."
         type="failed"
         send_chat_message "$type \"$message\""
 
@@ -60,7 +60,7 @@ main(){
      if [ -z "${INPUT_PROJECT_ID}" ]; then
         echo "PROJECT_ID not found. Exiting...."
 
-        message="DEPLOY: Deploy action failed. 🛂 PROJECT_ID not found. Exiting...."
+        message="*DEPLOY*: Deploy action failed. 🛂 PROJECT_ID not found. Exiting...."
         type="failed"
         send_chat_message "$type \"$message\""
 
@@ -74,7 +74,7 @@ main(){
      gcloud config set project "$INPUT_PROJECT_ID"
   fi
 
-  message="DEPLOY: Starting deployment to Google Cloud..."
+  message="*DEPLOY*: Starting deployment to Google Cloud..."
   type="loading"
   send_chat_message "$type \"$message\""
 
@@ -85,7 +85,7 @@ main(){
   echo ""
   echo ""
 
-  message="DEPLOY: Deploy action finished succeed! 🎉🎉"
+  message="*DEPLOY*: Deploy action finished succeed! 🎉🎉"
   type="success"
   send_chat_message "$type \"$message\""
 }
