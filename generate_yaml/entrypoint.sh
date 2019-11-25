@@ -31,7 +31,6 @@ main(){
   is_staging="true"
   ready="false"
 
-  echo "Deploy to: $DEPLOY_ENVIRONMENT"
   if [ -z "${DEPLOY_ENVIRONMENT}" ] && [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
     is_staging="false"
   fi
@@ -46,12 +45,11 @@ main(){
 
   echo ""
   echo "Started at $(date)"
+  echo "Deploy to: $DEPLOY_ENVIRONMENT, is_staging = $is_staging"
   echo ""
   echo ""
 
   # Generate app.yaml file
-  
-  echo "STEP 1 OF 1: Generating app.yaml file..."
 
   FILE=app_example.yaml
   deploy_env="Production"
@@ -59,6 +57,8 @@ main(){
     deploy_env="Staging"
     FILE=app_example_staging.yaml
   fi
+
+  echo "STEP 1 OF 1: Generating app.yaml file from $FILE ..."
 
   if [ -f "$FILE" ]; then
       ready="true"
