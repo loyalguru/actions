@@ -1,5 +1,30 @@
 #!/bin/sh -l
 
+send_chat_message()
+{
+  chat_path="/chat.sh"
+
+  type=$1
+  message=$2
+
+  sh -c "$chat_path $type \"$message\""
+}
+
+abort()
+{
+    echo "...error!"
+    echo ""
+    echo ""
+
+    message="*WORKER CHECK*: Worker check failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    type="failed"
+    send_chat_message "$type \"$message\""
+
+    exit 1
+}
+
+trap 'abort' 0
+
 set -e
 
 main(){
@@ -12,7 +37,7 @@ main(){
   
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
-    -H "Authorization: token ${INPUT_TOKEN}")
+    -H "Authorization: token ${TOKEN}")
   echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
   title=$(echo "${issue}" | jq -r .title)
 
@@ -29,8 +54,6 @@ main(){
   echo ""
   echo ""
 
-
-
   # Hold
 
   echo ""
@@ -46,22 +69,17 @@ main(){
   if [ $hold -ne 201 ]; then
     echo "Hold: unexpected response. Check if hold has been applied and retry. EXITING NOW..."
 
-    chat=$(curl -s -X POST \
-    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"🚫 WORKERS CHECK Hold: unexpected response. Check if hold has been applied and retry. \
-        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+    message="*WORKERS CHECK Hold*: unexpected response. Check if hold has been applied and retry."
+    type="failed"
+    send_chat_message "$type \"$message\""
 
     exit 1
   fi
   echo "...done"
 
-
   echo ""
   echo ""
   echo ""
-
-
 
   # Wait
   
@@ -89,11 +107,9 @@ main(){
     echo ""
     echo ""
 
-    chat=$(curl -s -X POST \
-    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"⭐ WORKERS CHECK: Ready to deploy.\
-        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⭐\"}")
+    message="*WORKERS CHECK*: Ready to deploy."
+    type="stars"
+    send_chat_message "$type \"$message\""
 
     echo "READY TO DEPLOY"
   else
@@ -110,11 +126,9 @@ main(){
     if [ $hold -ne 201 ]; then
       echo "Release: unexpected response. Check if release has been applied and retry. EXITING NOW..."
 
-      chat=$(curl -s -X POST \
-      "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-      -H 'Content-Type: application/json' \
-      -d "{\"text\" : \"🚫 WORKERS CHECK Release: unexpected response. Check if release has been applied and retry. \
-          Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* 🚫\"}")
+      message="*WORKERS CHECK Release*: unexpected response. Check if release has been applied and retry."
+      type="failed"
+      send_chat_message "$type \"$message\""
 
       exit 1
     fi
@@ -123,14 +137,16 @@ main(){
     echo ""
     echo ""
 
-    chat=$(curl -s -X POST \
-    "https://chat.googleapis.com/v1/spaces/${INPUT_SPACE}/messages?key=${INPUT_CKEY}&token=${INPUT_CTOKEN}" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"⚡ WORKERS CHECK: Timeout. Semaphores have been released. \
-        Deployer: *${GITHUB_ACTOR}*. PR: *${title}*. Project: *${GITHUB_REPOSITORY}* ⚡\"}")
-  
+    message="*WORKERS CHECK*: Timeout. Semaphores have been released."
+    type="action"
+    send_chat_message "$type \"$message\""
+
     echo "FAIL: WORKERS RUNNING"
   fi
 }
 
 main "$@"
+
+trap : 0
+
+echo "WORKERS CHECK FINISHED!"
