@@ -16,7 +16,7 @@ abort()
     echo ""
     echo ""
 
-    message="*LABEL CHECK*: Label check failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    message="*WORKER CHECK*: Worker check failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
     send_chat_message "$type \"$message\""
 
