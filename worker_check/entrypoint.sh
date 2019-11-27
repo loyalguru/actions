@@ -58,6 +58,12 @@ main(){
 
   echo ""
   echo "STEP 1 OF 2: Holding semaphores..."
+  
+  if [ -z "${DEPLOY_ENVIRONMENT}" ] || [ "${DEPLOY_ENVIRONMENT}" != "production" ];
+    echo "...no targeting production deploy"
+    echo "ERROR"
+    exit 1
+  end
 
   hold=$(curl -s -X POST "https://api.loyal.guru/deploy" \
       -H "Authorization: Basic ${token}" \
