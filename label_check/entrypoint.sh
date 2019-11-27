@@ -37,13 +37,17 @@ main(){
     issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${TOKEN}")
 
-    echo "check done"
-
     echo "${issue}"
  
     labels=$(echo "${issue}" | jq -r .labels)
 
-    has_deploy_label="nop"
+    production_label="deploy"
+    staging_label="deploy_staging"
+
+    production_target="N"
+    staging_target="N"
+
+    has_deploy_label="N"
     label_to_check=""
 
     echo "${labels}"
@@ -54,34 +58,51 @@ main(){
             echo "${row}" | base64 --decode | jq -r "${1}"
         }
         label_name=$(_jq '.name')
-        label_to_check=$label_name
 
-        if [ "$label_name" = "deploy" ]; then
-            echo "has deploy label, we are good"
-            has_deploy_label="yes"
+        if [ "$label_name" = "$production_label" ]; then
+            echo "...has '${production_label}' label..."
+            production_target="Y"
+            label_to_check=$production_label
             echo "::set-env name=DEPLOY_ENVIRONMENT::production"
         fi
 
-        if [ "$label_name" = "deploy_staging" ]; then
-            echo "has deploy label, we are good"
-            has_deploy_label="yes"
-            echo "::set-env name=DEPLOY_ENVIRONMENT::staging"
+        if [ "$label_name" = "$staging_label" ]; then
+            echo "...has '${staging_label}' label..."
+            staging_target="Y"
+            
         fi
     done
 
-    if [ $has_deploy_label = "nop" ]; then
-        echo "has no deploy label skiping"
-
+    if [[ $production_target = "N" ]]  && [[ $staging_target = "N" ]]; then
+        echo "..has no deploy label. Exiting now."
         trap : 0
-
         exit 0
     fi
+
+    if [ $staging_target = "Y" ]; then
+        echo "::set-env name=DEPLOY_ENVIRONMENT::staging"
+        label_to_check=$staging_label
+        if [ $production_target = "Y" ]; then
+            resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${production_label}" \
+                -H "Authorization: token ${TOKEN}")
+            echo "... both production and staging labels found. Staging overrides production..."
+        fi
+        production_target="N"
+    fi
+
+    echo "...done"
 
     message="*LABEL CHECK*: Attention!! New deploy action launched."
     type="action"
     send_chat_message "$type \"$message\""
 
+
+
     # Check if another PR has deploy or deploy_staging label
+    echo ""
+    echo ""
+    echo "Checking if another PR has ${label_to_check} label..."
+
     issues=$(curl -X GET "https://api.github.com/search/issues?q=is:pr+is:open+label:$label_to_check+repo:${GITHUB_REPOSITORY}" \
     -H "Authorization: token ${TOKEN}")
 
@@ -90,20 +111,30 @@ main(){
     echo ${issues}
 
     if [ $count != "1" ]; then
-      echo "Deploy in course"
+      echo "... another PR with ${label_to_check} found"
+
       # /repos/:owner/:repo/issues/:issue_number/labels/:name
       resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/$label_to_check" \
       -H "Authorization: token ${TOKEN}")
-      echo ${resp_del}
 
-      message="*LABEL CHECK*: There are another deploy in course."
+      message="*LABEL CHECK*: There is another deploy in course."
       type="failed"
       send_chat_message "$type \"$message\""
 
+      echo "ERROR"
       exit 1
     fi
 
+
+    echo "...done"
+
+
+
+    # Check if branch is up to date with master
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
+    echo ""
+    echo ""
+    echo "Checking if ${branch} is up to date with master..."
     
     git config remote.origin.url "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
@@ -111,7 +142,6 @@ main(){
     
     revision=$(git rev-list --left-right --count origin/master...origin/${branch} | head -c 1)
 
-    echo "revision"
     echo "$(git rev-list --left-right --count origin/master...origin/${branch})"
     echo ${revision}
 
@@ -121,11 +151,11 @@ main(){
         echo "CANNOT DEPLOY YOUR BANCH IS BEHIND MASTER";
         echo " "
         echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
-        resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/deploy" \
+        resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/$label_to_check" \
         -H "Authorization: token ${TOKEN}")
         echo ${resp_del2}
 
-        message="*LABEL CHECK*: Deplot stopped! Your branch is behind master."
+        message="*LABEL CHECK*: Deploy stopped! Your branch is behind master."
         type="failed"
         send_chat_message "$type \"$message\""
 
