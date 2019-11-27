@@ -58,16 +58,15 @@ main(){
             echo "${row}" | base64 --decode | jq -r "${1}"
         }
         label_name=$(_jq '.name')
-        label_to_check=$label_name
 
-        if [ "$label_name" = "deploy" ]; then
+        if [ "$label_name" = "$production_label" ]; then
             echo "...has '${production_label}' label..."
             production_target="Y"
             label_to_check=$production_label
             echo "::set-env name=DEPLOY_ENVIRONMENT::production"
         fi
 
-        if [ "$label_name" = "deploy_staging" ]; then
+        if [ "$label_name" = "$staging_label" ]; then
             echo "...has '${staging_label}' label..."
             staging_target="Y"
             

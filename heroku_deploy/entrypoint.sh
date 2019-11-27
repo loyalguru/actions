@@ -16,7 +16,7 @@ abort()
     echo ""
     echo ""
 
-    message="*MANAGEMENT API*: Heroku deploy. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    message="*HEROKU DEPLOY*: Heroku deploy. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
     send_chat_message "$type \"$message\""
 
@@ -48,7 +48,7 @@ main(){
     exit 0
   fi
 
-  message="*MANAGEMENT API: Branch ${branch} will be deployed"
+  message="*HEROKU DEPLOY: Branch ${branch} will be deployed"
   type="action"
   send_chat_message "$type \"$message\""
 
@@ -57,7 +57,7 @@ main(){
   echo "...done"
 
 
-  message="MANAGEMENT API: Branch ${branch} deployed. Run any migration or rake needed."
+  message="HEROKU DEPLOY: Branch ${branch} deployed. Run any migration or rake needed."
   type="stars"
   send_chat_message "$type \"$message\""
 }
