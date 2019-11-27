@@ -45,7 +45,7 @@ main(){
   if [ -z "${DEPLOY_ENVIRONMENT}" ] || [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
     echo "...not being executed on production environment"
     echo "ERROR"
-    exit 0
+    exit 1
   fi
 
   message="*HEROKU DEPLOY: Branch ${branch} will be deployed"
