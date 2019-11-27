@@ -63,7 +63,7 @@ main(){
     echo "...no targeting production deploy"
     echo "ERROR"
     exit 1
-  end
+  fi
 
   hold=$(curl -s -X POST "https://api.loyal.guru/deploy" \
       -H "Authorization: Basic ${token}" \
