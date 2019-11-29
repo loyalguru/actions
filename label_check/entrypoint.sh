@@ -92,7 +92,7 @@ main(){
 
     echo "...done"
 
-    message="*LABEL CHECK*: ${label_to_check}: Attention!! New deploy action launched."
+    message="*LABEL CHECK*: *${label_to_check}*: Attention!! New deploy action launched."
     type="action"
     send_chat_message "$type \"$message\""
 
