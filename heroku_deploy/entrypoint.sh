@@ -42,8 +42,14 @@ main(){
   echo ""
   echo "Deploy ${branch}..."
 
-  if [ -z "${DEPLOY_ENVIRONMENT}" ] || [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
-    echo "...not being executed on production environment"
+  if [ -z "${DEPLOY_ENVIRONMENT}" ]; then
+    echo "...deploy environment not set"
+    echo "ERROR"
+    exit 1
+  fi
+  
+  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
+    echo "...${DEPLOY_ENVIRONMENT} is not a valid environment"
     echo "ERROR"
     exit 1
   fi
