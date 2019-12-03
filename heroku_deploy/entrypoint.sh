@@ -54,7 +54,7 @@ main(){
     exit 1
   fi
 
-  message="*HEROKU DEPLOY: Branch ${branch} will be deployed"
+  message="*HEROKU DEPLOY: ${DEPLOY_ENVIRONMENT}: Branch ${branch} will be deployed"
   type="action"
   send_chat_message "$type \"$message\""
   
@@ -69,7 +69,7 @@ main(){
   echo "...done"
 
 
-  message="HEROKU DEPLOY: Branch ${branch} deployed. Run any migration or rake needed."
+  message="HEROKU DEPLOY: ${DEPLOY_ENVIRONMENT}: Branch ${branch} deployed. Run any migration or rake needed."
   type="stars"
   send_chat_message "$type \"$message\""
 }
