@@ -42,8 +42,14 @@ main(){
   echo ""
   echo "Deploy ${branch}..."
 
-  if [ -z "${DEPLOY_ENVIRONMENT}" ] || [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
-    echo "...not being executed on production environment"
+  if [ -z "${DEPLOY_ENVIRONMENT}" ]; then
+    echo "...deploy environment not set"
+    echo "ERROR"
+    exit 1
+  fi
+  
+  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
+    echo "...${DEPLOY_ENVIRONMENT} is not a valid environment"
     echo "ERROR"
     exit 1
   fi
@@ -51,8 +57,14 @@ main(){
   message="*HEROKU DEPLOY: Branch ${branch} will be deployed"
   type="action"
   send_chat_message "$type \"$message\""
-
-  git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${INPUT_HEROKU_APP_NAME}.git HEAD:master -f
+  
+  
+  app_name=${INPUT_HEROKU_APP_NAME_STAGING}
+  if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
+    app_name=${INPUT_HEROKU_APP_NAME}
+  fi
+  
+  git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
 
   echo "...done"
 
