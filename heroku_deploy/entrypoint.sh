@@ -57,8 +57,14 @@ main(){
   message="*HEROKU DEPLOY: Branch ${branch} will be deployed"
   type="action"
   send_chat_message "$type \"$message\""
-
-  git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${INPUT_HEROKU_APP_NAME}.git HEAD:master -f
+  
+  
+  app_name=${INPUT_HEROKU_APP_NAME_STAGING}
+  if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
+    app_name=${INPUT_HEROKU_APP_NAME}
+  fi
+  
+  git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
 
   echo "...done"
 
