@@ -29,6 +29,11 @@ set -e
 
 main(){
 
+  is_staging="false"
+  if [ ! -z "${DEPLOY_ENVIRONMENT}" ] && [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
+    is_staging="true"
+  fi
+
   echo "------------------------------------------------"
   echo "------------------------------------------------"
   echo "||                                            ||"
@@ -78,7 +83,11 @@ main(){
   type="loading"
   send_chat_message "$type \"$message\""
 
-  command="gcloud app deploy app.yaml --quiet --no-promote"
+  command_argument='--no-promote'
+  if [ "$is_staging" = "true" ]; then
+    command_argument=''
+  fi
+  command="gcloud app deploy app.yaml --quiet $command_argument"
   sh -c "$command"
 
   echo "...done!"
