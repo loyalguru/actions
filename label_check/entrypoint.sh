@@ -92,7 +92,7 @@ main(){
 
     echo "...done"
 
-    message="*LABEL CHECK*: Attention!! New deploy action launched."
+    message="*LABEL CHECK*: *${label_to_check}*: Attention!! New deploy action launched."
     type="action"
     send_chat_message "$type \"$message\""
 
@@ -117,7 +117,7 @@ main(){
       resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/$label_to_check" \
       -H "Authorization: token ${TOKEN}")
 
-      message="*LABEL CHECK*: There is another deploy in course."
+      message="*LABEL CHECK*: *${label_to_check}*: There is another deploy in course."
       type="failed"
       send_chat_message "$type \"$message\""
 
@@ -155,14 +155,14 @@ main(){
         -H "Authorization: token ${TOKEN}")
         echo ${resp_del2}
 
-        message="*LABEL CHECK*: Deploy stopped! Your branch is behind master."
+        message="*LABEL CHECK*: *${label_to_check}*: Deploy stopped! Your branch is behind master."
         type="failed"
         send_chat_message "$type \"$message\""
 
         exit 1;
     fi
 
-    message="*LABEL CHECK*: You have free way to deploy."
+    message="*LABEL CHECK*: *${label_to_check}*: You have free way to deploy."
     type="stars"
     send_chat_message "$type \"$message\""
 }
