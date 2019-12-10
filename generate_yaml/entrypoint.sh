@@ -68,9 +68,11 @@ main(){
 
     db_full_url=$INPUT_DB_FULL_URL
     google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS
+    google_credentials=$INPUT_GOOGLE_CREDENTIALS
     if [ "$is_staging" = "true" ]; then
       db_full_url=$INPUT_DB_FULL_URL_STAGING
       google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS_STAGING
+      google_credentials=$INPUT_GOOGLE_CREDENTIALS_STAGING
     fi
 
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
@@ -86,6 +88,11 @@ main(){
     if [ ! -z "${google_pub_sub_credentials}" ]; then
       PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
       echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
+    fi
+
+    if [ ! -z "${google_credentials}" ]; then
+      CREDENTIALS=$(echo "$google_credentials" | base64 -d)
+      echo "  GOOGLE_CREDENTIALS: '$CREDENTIALS'" >> $FILE
     fi
 
     mv $FILE app.yaml
