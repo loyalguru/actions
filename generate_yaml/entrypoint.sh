@@ -69,10 +69,12 @@ main(){
     db_full_url=$INPUT_DB_FULL_URL
     google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS
     google_credentials=$INPUT_GOOGLE_CREDENTIALS
+    launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY
     if [ "$is_staging" = "true" ]; then
       db_full_url=$INPUT_DB_FULL_URL_STAGING
       google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS_STAGING
       google_credentials=$INPUT_GOOGLE_CREDENTIALS_STAGING
+      launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
     fi
 
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
@@ -85,6 +87,7 @@ main(){
     sed -i -e "s#@AWS_SECRET_ACCESS_KEY@#'${INPUT_AWS_SECRET_ACCESS_KEY}'#g" $FILE
     sed -i -e "s/@DATADOG_API_KEY@/'${INPUT_DATADOG_API_KEY}'/g" $FILE
     sed -i -e "s#@SENTRY_DSN@#\'${INPUT_SENTRY_DSN}'#g" $FILE
+    sed -i -e "s#@LAUNCHDARKLY_SDKKEY@#\'${launchdarkly_sdkkey}'#g" $FILE
     if [ ! -z "${google_pub_sub_credentials}" ]; then
       PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
       echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
