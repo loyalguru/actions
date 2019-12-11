@@ -76,9 +76,8 @@ main(){
       google_credentials=$INPUT_GOOGLE_CREDENTIALS_STAGING
       launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
     fi
-
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
-    sed -i -e "s#@DB_FULL_URL@#\"${db_full_url}\"#g" $FILE
+    sed -i -e "s#@DB_FULL_URL@#\"${db_full_url/&/\&}\"#g" $FILE
     sed -i -e "s/@REDIS_CACHE_USER@/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
     sed -i -e "s/@REDIS_CACHE_PASSWORD@/'${INPUT_REDIS_CACHE_PASSWORD}'/g" $FILE
     sed -i -e "s/@REDIS_SIDEKIQ_USER@/'${INPUT_REDIS_SIDEKIQ_USER}'/g" $FILE
