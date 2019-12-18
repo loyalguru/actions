@@ -72,6 +72,12 @@ main(){
   message="*HEROKU DEPLOY*: ${DEPLOY_ENVIRONMENT}: Branch ${branch} deployed. Run any migration or rake needed."
   type="stars"
   send_chat_message "$type \"$message\""
+  
+  if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
+    message="⚡ ⚡ *HEROKU DEPLOY*: Remember to release the friggin semaphores, thank you! ⚡ ⚡"
+    type="action"
+    send_chat_message "$type \"$message\""
+  fi
 }
 
 main "$@"
