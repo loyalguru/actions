@@ -25,7 +25,7 @@ main(){
 
   error_message=""
   if [ "$err" != "" ]; then
-    error_message="Motive:         *${err}*"
+    error_message="Motive:              *${err}*"
   fi
 
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
@@ -36,7 +36,7 @@ main(){
   chat=$(curl -s -X POST \
     "https://chat.googleapis.com/v1/spaces/${SPACE}/messages?key=${CKEY}&token=${CTOKEN}" \
     -H 'Content-Type: application/json' \
-    -d "{\"text\" : \"${icon} ${message} \nEnvironment:    *${environment}* \nProject:        *${GITHUB_REPOSITORY}* \nPull Request:   *${title}* \nDeployer:       *${GITHUB_ACTOR}* \n${error_message} \"}")
+    -d "{\"text\" : \"${icon} ${message} \nEnvironment:    *${environment}* \nProject:              *${GITHUB_REPOSITORY}* \nPull Request:    *${title}* \nDeployer:           *${GITHUB_ACTOR}* \n${error_message} \"}")
 
 }
 
