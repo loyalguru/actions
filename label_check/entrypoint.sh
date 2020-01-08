@@ -5,9 +5,10 @@ send_chat_message()
   chat_path="/chat.sh"
 
   type=$1
-  message=$2
+  environment=$2
+  message=$3
 
-  sh -c "$chat_path $type \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\""
 }
 
 abort()
@@ -16,9 +17,10 @@ abort()
     echo ""
     echo ""
 
-    message="*LABEL CHECK*: Label check failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    environment="${DEPLOY_ENVIRONMENT^}"
+    message="Unexpected failure. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
-    send_chat_message "$type \"$message\""
+    send_chat_message "$type \"$environment\" \"$message\""
 
     exit 1
 }
@@ -63,6 +65,7 @@ main(){
             echo "...has '${production_label}' label..."
             production_target="Y"
             label_to_check=$production_label
+            DEPLOY_ENVIRONMENT="production"
             echo "::set-env name=DEPLOY_ENVIRONMENT::production"
         fi
 
@@ -80,6 +83,7 @@ main(){
     fi
 
     if [ $staging_target = "Y" ]; then
+        DEPLOY_ENVIRONMENT="staging"
         echo "::set-env name=DEPLOY_ENVIRONMENT::staging"
         label_to_check=$staging_label
         if [ $production_target = "Y" ]; then
@@ -92,11 +96,8 @@ main(){
 
     echo "...done"
 
-    message="*LABEL CHECK*: *${label_to_check}*: Attention!! New deploy action launched."
     type="action"
-    send_chat_message "$type \"$message\""
-
-
+    send_chat_message "$type \"$label_to_check\""
 
     # Check if another PR has deploy or deploy_staging label
     echo ""
@@ -117,18 +118,15 @@ main(){
       resp_del=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/$label_to_check" \
       -H "Authorization: token ${TOKEN}")
 
-      message="*LABEL CHECK*: *${label_to_check}*: There is another deploy in course."
+      message="There is another deploy in course."
       type="failed"
-      send_chat_message "$type \"$message\""
+      send_chat_message "$type \"$label_to_check\" \"$message\""
 
       echo "ERROR"
       exit 1
     fi
 
-
     echo "...done"
-
-
 
     # Check if branch is up to date with master
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
@@ -155,16 +153,12 @@ main(){
         -H "Authorization: token ${TOKEN}")
         echo ${resp_del2}
 
-        message="*LABEL CHECK*: *${label_to_check}*: Deploy stopped! Your branch is behind master."
+        message="Your branch is behind master!"
         type="failed"
-        send_chat_message "$type \"$message\""
+        send_chat_message "$type \"$label_to_check\" \"$message\""
 
         exit 1;
     fi
-
-    message="*LABEL CHECK*: *${label_to_check}*: You have free way to deploy."
-    type="stars"
-    send_chat_message "$type \"$message\""
 }
 
 main "$@"
