@@ -17,7 +17,7 @@ abort()
     echo ""
     echo ""
 
-    environment="${DEPLOY_ENVIRONMENT^}"
+    environment="${DEPLOY_ENVIRONMENT}"
     message="Unexpected failure. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
     type="failed"
     send_chat_message "$type \"$environment\" \"$message\""
@@ -37,7 +37,7 @@ main(){
   tries="1"
   token=$INPUT_RAILSTOKEN
 
-  environment="${DEPLOY_ENVIRONMENT^}"
+  environment="${DEPLOY_ENVIRONMENT}"
   
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
