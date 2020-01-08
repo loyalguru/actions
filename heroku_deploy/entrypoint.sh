@@ -57,7 +57,7 @@ main(){
     echo "ERROR"
     exit 1
   fi
-  
+
   app_name=${INPUT_HEROKU_APP_NAME_STAGING}
   if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
     app_name=${INPUT_HEROKU_APP_NAME}

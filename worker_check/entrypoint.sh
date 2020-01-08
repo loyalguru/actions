@@ -148,6 +148,7 @@ main(){
     send_chat_message "$type \"$environment\" \"$message\""
 
     echo "FAIL: WORKERS RUNNING"
+    exit 1
   fi
 }
 
