@@ -135,7 +135,7 @@ main(){
       message="Release: Unexpected response. Check if release has been applied and retry."
       type="failed"
       send_chat_message "$type \"$environment\" \"$message\""
-
+      trap : 0
       exit 1
     fi
 
@@ -146,7 +146,7 @@ main(){
     message="Timeout. Semaphores have been released."
     type="failed"
     send_chat_message "$type \"$environment\" \"$message\""
-
+    trap : 0
     echo "FAIL: WORKERS RUNNING"
     exit 1
   fi

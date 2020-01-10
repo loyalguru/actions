@@ -107,7 +107,7 @@ main(){
     message="Failed to generate the file, ${FILE} file don't exist."
     type="failed"
     send_chat_message "$type \"$environment\" \"$message\""
-
+    trap : 0
     exit 1
   fi
 

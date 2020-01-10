@@ -62,7 +62,7 @@ main(){
         message="🛂 APPLICATION_CREDENTIALS not found"
         type="failed"
         send_chat_message "$type \"$environment\" \"$message\""
-
+        trap : 0
         exit 1
      fi
 
@@ -72,7 +72,7 @@ main(){
         message="🛂 PROJECT_ID not found"
         type="failed"
         send_chat_message "$type \"$environment\" \"$message\""
-
+        trap : 0
         exit 1
      fi
 

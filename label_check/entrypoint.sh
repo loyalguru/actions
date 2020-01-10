@@ -121,7 +121,7 @@ main(){
       message="There is another deploy in course."
       type="failed"
       send_chat_message "$type \"$label_to_check\" \"$message\""
-
+      trap : 0
       echo "ERROR"
       exit 1
     fi
@@ -156,7 +156,7 @@ main(){
         message="Your branch is behind master!"
         type="failed"
         send_chat_message "$type \"$label_to_check\" \"$message\""
-
+        trap : 0
         exit 1;
     fi
 }
