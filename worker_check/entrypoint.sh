@@ -5,9 +5,10 @@ send_chat_message()
   chat_path="/chat.sh"
 
   type=$1
-  message=$2
+  environment=$2
+  message=$3
 
-  sh -c "$chat_path $type \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\""
 }
 
 abort()
@@ -16,9 +17,10 @@ abort()
     echo ""
     echo ""
 
-    message="*WORKER CHECK*: Worker check failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    environment="${DEPLOY_ENVIRONMENT}"
+    message="Unexpected failure. Please go to project ${GITHUB_REPOSITORY} -> Actions to see the errors."
     type="failed"
-    send_chat_message "$type \"$message\""
+    send_chat_message "$type \"$environment\" \"$message\""
 
     exit 1
 }
@@ -34,6 +36,8 @@ main(){
   release="false"
   tries="1"
   token=$INPUT_RAILSTOKEN
+
+  environment="${DEPLOY_ENVIRONMENT}"
   
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
@@ -75,9 +79,9 @@ main(){
   if [ $hold -ne 201 ]; then
     echo "Hold: unexpected response. Check if hold has been applied and retry. EXITING NOW..."
 
-    message="*WORKERS CHECK Hold*: unexpected response. Check if hold has been applied and retry."
+    message="Hold: Unexpected response. Check if hold has been applied and retry."
     type="failed"
-    send_chat_message "$type \"$message\""
+    send_chat_message "$type \"$environment\" \"$message\""
 
     exit 1
   fi
@@ -113,10 +117,6 @@ main(){
     echo ""
     echo ""
 
-    message="*WORKERS CHECK*: Ready to deploy."
-    type="stars"
-    send_chat_message "$type \"$message\""
-
     echo "READY TO DEPLOY"
   else
     # Release semaphores
@@ -132,10 +132,10 @@ main(){
     if [ $hold -ne 201 ]; then
       echo "Release: unexpected response. Check if release has been applied and retry. EXITING NOW..."
 
-      message="*WORKERS CHECK Release*: unexpected response. Check if release has been applied and retry."
+      message="Release: Unexpected response. Check if release has been applied and retry."
       type="failed"
-      send_chat_message "$type \"$message\""
-
+      send_chat_message "$type \"$environment\" \"$message\""
+      trap : 0
       exit 1
     fi
 
@@ -143,10 +143,10 @@ main(){
     echo ""
     echo ""
 
-    message="*WORKERS CHECK*: Timeout. Semaphores have been released."
-    type="action"
-    send_chat_message "$type \"$message\""
-
+    message="Timeout. Semaphores have been released."
+    type="failed"
+    send_chat_message "$type \"$environment\" \"$message\""
+    trap : 0
     echo "FAIL: WORKERS RUNNING"
     exit 1
   fi

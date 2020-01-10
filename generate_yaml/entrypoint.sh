@@ -5,9 +5,10 @@ send_chat_message()
   chat_path="/chat.sh"
 
   type=$1
-  message=$2
+  environment=$2
+  message=$3
 
-  sh -c "$chat_path $type \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\""
 }
 
 abort()
@@ -16,9 +17,10 @@ abort()
     echo ""
     echo ""
 
-    message="*GENERATE YAML*: YAML file generation failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    environment="${DEPLOY_ENVIRONMENT}"
+    message="Unexpected failure. Please go to project ${GITHUB_REPOSITORY} -> Actions to see the errors."
     type="failed"
-    send_chat_message "$type \"$message\""
+    send_chat_message "$type \"$environment\" \"$message\""
 
     exit 1
 }
@@ -34,6 +36,8 @@ main(){
   if [ ! -z "${DEPLOY_ENVIRONMENT}" ] && [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
     is_staging="false"
   fi
+
+  environment="${DEPLOY_ENVIRONMENT}"
 
   echo "-------------------------------------"
   echo "-------------------------------------"
@@ -100,20 +104,16 @@ main(){
   else
     echo "${FILE} file don't exist."
 
-    message="*GENERATE YAML*: failed to generate the file, ${FILE} file don't exist."
+    message="Failed to generate the file, ${FILE} file don't exist."
     type="failed"
-    send_chat_message "$type \"$message\""
-
+    send_chat_message "$type \"$environment\" \"$message\""
+    trap : 0
     exit 1
   fi
 
   echo "..done"
   echo ""
   echo ""
-
-  message="*GENERATE YAML*: YAML file generation finished succeed. Starting deploy action to *$deploy_env*..."
-  type="thumbs"
-  send_chat_message "$type \"$message\""
 
 }
 

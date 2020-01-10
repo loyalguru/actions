@@ -5,9 +5,10 @@ send_chat_message()
   chat_path="/chat.sh"
 
   type=$1
-  message=$2
+  environment=$2
+  message=$3
 
-  sh -c "$chat_path $type \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\""
 }
 
 abort()
@@ -16,9 +17,10 @@ abort()
     echo ""
     echo ""
 
-    message="*HEROKU DEPLOY*: Heroku deploy. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    environment="${DEPLOY_ENVIRONMENT}"
+    message="Unexpected failure. Please go to project ${GITHUB_REPOSITORY} -> Actions to see the errors."
     type="failed"
-    send_chat_message "$type \"$message\""
+    send_chat_message "$type \"$environment\" \"$message\""
 
     exit 1
 }
@@ -29,6 +31,8 @@ set -e
 
 main(){
   branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
+
+  environment="${DEPLOY_ENVIRONMENT}"
 
   echo "-------------------------------------"
   echo "-------------------------------------"
@@ -54,11 +58,6 @@ main(){
     exit 1
   fi
 
-  message="*HEROKU DEPLOY*: ${DEPLOY_ENVIRONMENT}: Branch ${branch} will be deployed"
-  type="action"
-  send_chat_message "$type \"$message\""
-  
-  
   app_name=${INPUT_HEROKU_APP_NAME_STAGING}
   if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
     app_name=${INPUT_HEROKU_APP_NAME}
@@ -68,16 +67,8 @@ main(){
 
   echo "...done"
 
-
-  message="*HEROKU DEPLOY*: ${DEPLOY_ENVIRONMENT}: Branch ${branch} deployed. Run any migration or rake needed."
-  type="stars"
-  send_chat_message "$type \"$message\""
-  
-  if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
-    message="⚡ ⚡ *HEROKU DEPLOY*: Remember to release the friggin semaphores, thank you! ⚡ ⚡"
-    type="action"
-    send_chat_message "$type \"$message\""
-  fi
+  type="success"
+  send_chat_message "$type \"$environment\""
 }
 
 main "$@"

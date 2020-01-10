@@ -5,9 +5,10 @@ send_chat_message()
   chat_path="/chat.sh"
 
   type=$1
-  message=$2
+  environment=$2
+  message=$3
 
-  sh -c "$chat_path $type \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\""
 }
 
 abort()
@@ -16,9 +17,10 @@ abort()
     echo ""
     echo ""
 
-    message="*DEPLOY*: Deploy action failed. Please go to project *${GITHUB_REPOSITORY}* -> Actions to see the errors."
+    environment="${DEPLOY_ENVIRONMENT}"
+    message="Unexpected failure. Please go to project ${GITHUB_REPOSITORY} -> Actions to see the errors."
     type="failed"
-    send_chat_message "$type \"$message\""
+    send_chat_message "$type \"$environment\" \"$message\""
 
     exit 1
 }
@@ -33,6 +35,8 @@ main(){
   if [ ! -z "${DEPLOY_ENVIRONMENT}" ] && [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
     is_staging="true"
   fi
+
+  environment="${DEPLOY_ENVIRONMENT}"
 
   echo "------------------------------------------------"
   echo "------------------------------------------------"
@@ -55,20 +59,20 @@ main(){
      if [ -z "${INPUT_APPLICATION_CREDENTIALS}" ]; then
         echo "APPLICATION_CREDENTIALS not found. Exiting...."
 
-        message="*DEPLOY*: Deploy action failed. 🛂 APPLICATION_CREDENTIALS not found. Exiting...."
+        message="🛂 APPLICATION_CREDENTIALS not found"
         type="failed"
-        send_chat_message "$type \"$message\""
-
+        send_chat_message "$type \"$environment\" \"$message\""
+        trap : 0
         exit 1
      fi
 
      if [ -z "${INPUT_PROJECT_ID}" ]; then
         echo "PROJECT_ID not found. Exiting...."
 
-        message="*DEPLOY*: Deploy action failed. 🛂 PROJECT_ID not found. Exiting...."
+        message="🛂 PROJECT_ID not found"
         type="failed"
-        send_chat_message "$type \"$message\""
-
+        send_chat_message "$type \"$environment\" \"$message\""
+        trap : 0
         exit 1
      fi
 
@@ -78,10 +82,6 @@ main(){
      echo "This is the project: $INPUT_PROJECT_ID"
      gcloud config set project "$INPUT_PROJECT_ID"
   fi
-
-  message="*DEPLOY*: Starting deployment to Google Cloud..."
-  type="loading"
-  send_chat_message "$type \"$message\""
 
   command_argument='--no-promote'
   if [ "$is_staging" = "true" ]; then
@@ -94,9 +94,8 @@ main(){
   echo ""
   echo ""
 
-  message="*DEPLOY*: Deploy action finished succeed! 🎉🎉"
   type="success"
-  send_chat_message "$type \"$message\""
+  send_chat_message "$type \"$environment\""
 }
 
 main "$@"
