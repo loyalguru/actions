@@ -97,7 +97,7 @@ main(){
     echo "...done"
 
     type="action"
-    send_chat_message "$type \"$label_to_check\""
+    send_chat_message "$type \"$DEPLOY_ENVIRONMENT\""
 
     # Check if another PR has deploy or deploy_staging label
     echo ""
