@@ -45,6 +45,8 @@ main(){
 
     production_label="deploy"
     staging_label="deploy_staging"
+    staging_label_two="deploy_staging_2"
+    staging_label_three="deploy_staging_3"
 
     production_target="N"
     staging_target="N"
@@ -72,7 +74,20 @@ main(){
         if [ "$label_name" = "$staging_label" ]; then
             echo "...has '${staging_label}' label..."
             staging_target="Y"
-            
+            DEPLOY_ENVIRONMENT="staging"
+            label_to_check=$staging_label
+            ç
+        elif [ "$label_name" = "$staging_label_two" ]; then
+            echo "...has '${staging_label_two}' label..."
+            staging_target="Y"
+            DEPLOY_ENVIRONMENT="staging_2"
+            label_to_check=$staging_label_two
+
+        elif [ "$label_name" = "$staging_label_three" ]; then
+            echo "...has '${staging_label_three}' label..."
+            staging_target="Y"
+            DEPLOY_ENVIRONMENT="staging_3"
+            label_to_check=$staging_label_three
         fi
     done
 
@@ -83,9 +98,7 @@ main(){
     fi
 
     if [ $staging_target = "Y" ]; then
-        DEPLOY_ENVIRONMENT="staging"
-        echo "::set-env name=DEPLOY_ENVIRONMENT::staging"
-        label_to_check=$staging_label
+        echo "::set-env name=DEPLOY_ENVIRONMENT::${DEPLOY_ENVIRONMENT}"
         if [ $production_target = "Y" ]; then
             resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${production_label}" \
                 -H "Authorization: token ${TOKEN}")
@@ -120,7 +133,7 @@ main(){
 
       message="There is another deploy in course."
       type="failed"
-      send_chat_message "$type \"$label_to_check\" \"$message\""
+      send_chat_message "$type \"$DEPLOY_ENVIRONMENT\" \"$message\""
       trap : 0
       echo "ERROR"
       exit 1
@@ -155,7 +168,7 @@ main(){
 
         message="Your branch is behind master!"
         type="failed"
-        send_chat_message "$type \"$label_to_check\" \"$message\""
+        send_chat_message "$type \"$DEPLOY_ENVIRONMENT\" \"$message\""
         trap : 0
         exit 1;
     fi

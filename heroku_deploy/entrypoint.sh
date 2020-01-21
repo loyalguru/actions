@@ -52,7 +52,7 @@ main(){
     exit 1
   fi
   
-  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
+  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging_2" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging_3" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
     echo "...${DEPLOY_ENVIRONMENT} is not a valid environment"
     echo "ERROR"
     exit 1
@@ -61,6 +61,13 @@ main(){
   app_name=${INPUT_HEROKU_APP_NAME_STAGING}
   if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
     app_name=${INPUT_HEROKU_APP_NAME}
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_2" ]; then
+    app_name=${INPUT_HEROKU_APP_NAME_STAGING_TWO}
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ]; then
+    app_name=${INPUT_HEROKU_APP_NAME_STAGING_THREE}
+
   fi
   
   git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
