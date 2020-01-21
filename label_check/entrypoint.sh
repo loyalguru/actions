@@ -76,7 +76,7 @@ main(){
             staging_target="Y"
             DEPLOY_ENVIRONMENT="staging"
             label_to_check=$staging_label
-            ç
+
         elif [ "$label_name" = "$staging_label_two" ]; then
             echo "...has '${staging_label_two}' label..."
             staging_target="Y"
