@@ -25,11 +25,6 @@ RUN chmod +x /chat.sh
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-RUN mkdir /app
-
-WORKDIR /app
-
-COPY ./package*.json /app/
 RUN npm install
 
 ENTRYPOINT ["/entrypoint.sh"]
