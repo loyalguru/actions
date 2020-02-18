@@ -31,9 +31,10 @@ set -e
 
 main(){
 
-  is_staging="false"
-  if [ ! -z "${DEPLOY_ENVIRONMENT}" ] && [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
-    is_staging="true"
+  is_staging="true"
+
+  if [ ! -z "${DEPLOY_ENVIRONMENT}" ] && [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
+    is_staging="false"
   fi
 
   environment="${DEPLOY_ENVIRONMENT}"
