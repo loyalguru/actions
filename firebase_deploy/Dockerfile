@@ -17,6 +17,8 @@ RUN	apk add --no-cache \
 	jq \
 	coreutils
 
+RUN npm config set unsafe-perm true
+
 RUN npm install -g firebase-tools
 
 ADD chat.sh /chat.sh
