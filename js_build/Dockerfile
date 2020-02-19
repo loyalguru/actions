@@ -9,7 +9,8 @@ LABEL "repository"="http://github.com/loyalguru/actions/js_build"
 LABEL "homepage"="http://github.com/loyalguru/actions/js_build"
 LABEL "maintainer"="Andrés D. Molins <adiaz@loyal.guru> / Jose Osorno <josorno@loyal.guru>"
 
-RUN	apk add --no-cache \
+RUN	apk add --no-cache --virtual .build-deps  \
+    make gcc g++ python \
     git \
 	bash \
 	ca-certificates \
