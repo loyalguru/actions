@@ -1,4 +1,4 @@
-FROM node:9.9.0-alpine
+FROM node:10.19.0-alpine
 
 LABEL "com.github.actions.name"="Deploy to Firebase"
 LABEL "com.github.actions.description"="Deploy a Javascript application to firebase"
