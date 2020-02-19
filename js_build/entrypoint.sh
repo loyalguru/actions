@@ -52,7 +52,11 @@ main(){
   echo ""
   echo ""
 
-  echo "STEP 1 OF 1: Building application ..."
+  echo "STEP 1 OF 2: Installing dependencies ..."
+
+  npm install
+
+  echo "STEP 2 OF 1: Building application ..."
 
   NG_PATH=$(command -v ng)
 
