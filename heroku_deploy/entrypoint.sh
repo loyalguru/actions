@@ -72,6 +72,10 @@ main(){
   
   git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
 
+  if [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
+    heroku run --app ${app_name} rake db:migrate
+  fi
+
   echo "...done"
 
   type="success"

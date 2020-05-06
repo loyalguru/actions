@@ -1,4 +1,4 @@
-FROM alpine/git
+FROM node:alpine
 
 LABEL "com.github.actions.name"="Deploy heroku app"
 LABEL "com.github.actions.description"="Deploys a heroku app"
@@ -15,7 +15,9 @@ RUN	apk add --no-cache \
 	curl \
 	curl-dev \
 	jq \
-	coreutils
+	coreutils \
+	git
+RUN yarn global add heroku
 
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh
