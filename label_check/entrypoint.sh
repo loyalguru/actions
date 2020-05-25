@@ -35,15 +35,16 @@ main(){
 
     echo "DEBUG {\"title\":\"${labels}\", \"head\":\"${branch}\", \"base\": \"staging\"}"
     echo "checking labels ${GITHUB_REPOSITORY}"
-    
+
     issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${TOKEN}")
 
     echo "${issue}"
- 
+
     labels=$(echo "${issue}" | jq -r .labels)
 
     production_label="deploy"
+    migration_label="migration"
     staging_label="deploy_staging"
     staging_label_two="deploy_staging_2"
     staging_label_three="deploy_staging_3"
@@ -53,9 +54,10 @@ main(){
 
     has_deploy_label="N"
     label_to_check=""
+    has_migration_label="N"
 
     echo "${labels}"
-    
+
     # Reading labels
     for row in $(echo "${labels}" | jq -r '.[] | @base64'); do
         _jq() {
@@ -89,7 +91,14 @@ main(){
             DEPLOY_ENVIRONMENT="staging_3"
             label_to_check=$staging_label_three
         fi
+
+        if [ "$label_name" = "$migration_label" ]; then
+            echo "...with '${migration_label}'..."
+            has_migration_label="Y"
+        fi
     done
+
+    echo "::set-env name=WITH_MIGRATION::${has_migration_label}"
 
     if [[ $production_target = "N" ]]  && [[ $staging_target = "N" ]]; then
         echo "..has no deploy label. Exiting now."
@@ -146,11 +155,11 @@ main(){
     echo ""
     echo ""
     echo "Checking if ${branch} is up to date with master..."
-    
+
     git config remote.origin.url "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
-    git fetch 
-    
+    git fetch
+
     revision=$(git rev-list --left-right --count origin/master...origin/${branch} | head -c 1)
 
     echo "$(git rev-list --left-right --count origin/master...origin/${branch})"
