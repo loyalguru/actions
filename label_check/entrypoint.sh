@@ -97,11 +97,8 @@ main(){
         if [ "$label_name" = "$migration_label" ]; then
             echo "...with '${migration_label}'..."
             has_migration_label="Y"
-            migration_message="true"
         fi
     done
-
-    echo "::set-env name=WITH_MIGRATION::${has_migration_label}"
 
     if [[ $production_target = "N" ]]  && [[ $staging_target = "N" ]]; then
         echo "..has no deploy label. Exiting now."
@@ -117,6 +114,12 @@ main(){
             echo "... both production and staging labels found. Staging overrides production..."
         fi
         production_target="N"
+    fi
+
+    # TODO: Change "$label_to_check = $staging_label_three" to $production_target = "Y"
+    if [ $label_to_check = $staging_label_three ] && [ $has_migration_label = "Y" ]; then
+        echo "::set-env name=WITH_MIGRATION::${has_migration_label}"
+        migration_message="true"
     fi
 
     echo "...done"
