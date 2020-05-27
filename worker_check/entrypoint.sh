@@ -7,8 +7,9 @@ send_chat_message()
   type=$1
   environment=$2
   message=$3
+  migration=$4
 
-  sh -c "$chat_path $type \"$environment\" \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\" \"migration\""
 }
 
 abort()
@@ -38,7 +39,7 @@ main(){
   token=$INPUT_RAILSTOKEN
 
   environment="${DEPLOY_ENVIRONMENT}"
-  
+
   number=$(jq --raw-output .number ${GITHUB_EVENT_PATH})
   issue=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}" \
     -H "Authorization: token ${TOKEN}")
@@ -62,7 +63,7 @@ main(){
 
   echo ""
   echo "STEP 1 OF 2: Holding semaphores..."
-  
+
   if [ -z "${DEPLOY_ENVIRONMENT}" ] || [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
     echo "...no targeting production deploy"
     echo "ERROR"
@@ -92,7 +93,7 @@ main(){
   echo ""
 
   # Wait
-  
+
   echo "STEP 2 OF 2: Waiting for workers..."
 
   while [[ "$ready" != "true" ]] && [[ $tries -lt 60 ]]
