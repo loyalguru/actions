@@ -7,8 +7,9 @@ send_chat_message()
   type=$1
   environment=$2
   message=$3
+  migration=$4
 
-  sh -c "$chat_path $type \"$environment\" \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\" \"migration\""
 }
 
 abort()
@@ -83,10 +84,15 @@ main(){
     heroku features:enable preboot -a ${app_name}
   fi
 
+  migration_message=""
+  if [ "${WITH_MIGRATION}" = "Y" ]; then
+    migration_message="true"
+  fi
+
   echo "...done"
 
   type="success"
-  send_chat_message "$type \"$environment\""
+  send_chat_message "$type \"$environment\" \"\" \"$migration_message\""
 }
 
 main "$@"

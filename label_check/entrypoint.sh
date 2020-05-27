@@ -7,8 +7,9 @@ send_chat_message()
   type=$1
   environment=$2
   message=$3
+  migration=$4
 
-  sh -c "$chat_path $type \"$environment\" \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\" \"migration\""
 }
 
 abort()
@@ -55,6 +56,7 @@ main(){
     has_deploy_label="N"
     label_to_check=""
     has_migration_label="N"
+    migration_message=""
 
     echo "${labels}"
 
@@ -95,6 +97,7 @@ main(){
         if [ "$label_name" = "$migration_label" ]; then
             echo "...with '${migration_label}'..."
             has_migration_label="Y"
+            migration_message="true"
         fi
     done
 
@@ -119,7 +122,7 @@ main(){
     echo "...done"
 
     type="action"
-    send_chat_message "$type \"$DEPLOY_ENVIRONMENT\""
+    send_chat_message "$type \"$DEPLOY_ENVIRONMENT\" \"\" \"$migration_message\""
 
     # Check if another PR has deploy or deploy_staging label
     echo ""
