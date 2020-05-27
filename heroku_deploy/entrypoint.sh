@@ -72,15 +72,13 @@ main(){
   fi
 
   # The preboot will be always active, only when the label “migration” is present will be disabled.
-  # TODO: Once tested, 'staging_3' must be changed to 'production'
-  if  [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
+  if  [ "${DEPLOY_ENVIRONMENT}" = "production" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
     heroku features:disable preboot -a ${app_name}
   fi
 
   git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
 
-  # TODO: Once tested, 'staging_3' must be changed to 'production'
-  if  [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
+  if  [ "${DEPLOY_ENVIRONMENT}" = "production" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
     heroku features:enable preboot -a ${app_name}
   fi
 

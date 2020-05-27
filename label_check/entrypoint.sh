@@ -116,8 +116,7 @@ main(){
         production_target="N"
     fi
 
-    # TODO: Change "$label_to_check = $staging_label_three" to $production_target = "Y"
-    if [ $label_to_check = $staging_label_three ] && [ $has_migration_label = "Y" ]; then
+    if [ $production_target = "Y" ] && [ $has_migration_label = "Y" ]; then
         echo "::set-env name=WITH_MIGRATION::${has_migration_label}"
         migration_message="true"
     fi
