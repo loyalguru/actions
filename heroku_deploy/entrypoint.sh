@@ -87,6 +87,10 @@ main(){
     migration_message="true"
   fi
 
+  if [ "${DEPLOY_ENVIRONMENT}" != "production" -a "${DEPLOY_ENVIRONMENT}" != "preproduction" ]; then
+    heroku run --app ${app_name} rake db:migrate
+  fi
+
   echo "...done"
 
   type="success"
