@@ -7,8 +7,9 @@ send_chat_message()
   type=$1
   environment=$2
   message=$3
+  migration=$4
 
-  sh -c "$chat_path $type \"$environment\" \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\" \"migration\""
 }
 
 abort()
@@ -51,7 +52,7 @@ main(){
     echo "ERROR"
     exit 1
   fi
-  
+
   if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging_2" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging_3" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
     echo "...${DEPLOY_ENVIRONMENT} is not a valid environment"
     echo "ERROR"
@@ -69,8 +70,22 @@ main(){
     app_name=${INPUT_HEROKU_APP_NAME_STAGING_THREE}
 
   fi
-  
-  git push https://heroku:${INPUT_HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
+
+  # The preboot will be always active, only when the label “migration” is present will be disabled.
+  if  [ "${DEPLOY_ENVIRONMENT}" = "production" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
+    heroku features:disable preboot -a ${app_name}
+  fi
+
+  git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
+
+  if  [ "${DEPLOY_ENVIRONMENT}" = "production" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
+    heroku features:enable preboot -a ${app_name}
+  fi
+
+  migration_message=""
+  if [ "${WITH_MIGRATION}" = "Y" ]; then
+    migration_message="true"
+  fi
 
   if [ "${DEPLOY_ENVIRONMENT}" != "production" -a "${DEPLOY_ENVIRONMENT}" != "preproduction" ]; then
     heroku run --app ${app_name} rake db:migrate
@@ -79,7 +94,7 @@ main(){
   echo "...done"
 
   type="success"
-  send_chat_message "$type \"$environment\""
+  send_chat_message "$type \"$environment\" \"\" \"$migration_message\""
 }
 
 main "$@"

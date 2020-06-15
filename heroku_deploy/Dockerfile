@@ -17,7 +17,8 @@ RUN	apk add --no-cache \
 	jq \
 	coreutils \
 	git
-RUN yarn global add heroku
+
+RUN curl https://cli-assets.heroku.com/install.sh | sh
 
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh

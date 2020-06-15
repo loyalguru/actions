@@ -7,8 +7,9 @@ send_chat_message()
   type=$1
   environment=$2
   message=$3
+  migration=$4
 
-  sh -c "$chat_path $type \"$environment\" \"$message\""
+  sh -c "$chat_path $type \"$environment\" \"$message\" \"migration\""
 }
 
 abort()
