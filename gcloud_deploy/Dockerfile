@@ -6,7 +6,8 @@ RUN	apk add --no-cache \
 	curl \
 	curl-dev \
 	jq \
-	coreutils
+	coreutils \
+	make
 
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh
