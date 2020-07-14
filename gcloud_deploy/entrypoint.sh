@@ -89,6 +89,9 @@ main(){
     command_argument=''
   fi
   command="gcloud app deploy app.yaml --quiet $command_argument"
+  if [ "${INPUT_MAKEFILE_DEPLOYMENT}" = "true" ]; then
+    command="make publish-version"
+  fi
   sh -c "$command"
 
   echo "...done!"
