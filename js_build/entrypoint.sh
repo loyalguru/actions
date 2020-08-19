@@ -61,7 +61,7 @@ main(){
 
   NG_PATH=$(command -v ng)
 
-  node --max_old_space_size=4000 "$NG_PATH" build --env "$DEPLOY_ENVIRONMENT" --aot
+  node --max_old_space_size=4000 "$NG_PATH" build -c "$DEPLOY_ENVIRONMENT" --aot
 
   echo "..done"
   echo ""
