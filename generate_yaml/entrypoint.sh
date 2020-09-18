@@ -74,6 +74,7 @@ main(){
     google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS
     google_credentials=$INPUT_GOOGLE_CREDENTIALS
     launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY
+    papertrail_url=$INPUT_PAPERTRAIL_URL
     if [ "$is_staging" = "true" ]; then
       db_full_url=$(printf "%q" "$INPUT_DB_FULL_URL_STAGING")
       google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS_STAGING
@@ -92,6 +93,7 @@ main(){
     sed -i -e "s/@DATADOG_API_KEY@/'${INPUT_DATADOG_API_KEY}'/g" $FILE
     sed -i -e "s#@SENTRY_DSN@#\'${INPUT_SENTRY_DSN}'#g" $FILE
     sed -i -e "s#@LAUNCHDARKLY_SDKKEY@#\'${launchdarkly_sdkkey}'#g" $FILE
+    sed -i -e "s#@PAPERTRAIL_URL@#${papertrail_url}#g" $FILE
     if [ ! -z "${google_pub_sub_credentials}" ]; then
       PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
       echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
