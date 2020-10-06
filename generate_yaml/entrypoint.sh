@@ -103,8 +103,9 @@ main(){
       CREDENTIALS=$(echo "$google_credentials" | base64 -d)
       echo "  GOOGLE_CREDENTIALS: '$CREDENTIALS'" >> $FILE
     fi
-    echo $FILE
+
     mv $FILE app.yaml
+    cat app.yaml
   else
     echo "${FILE} file don't exist."
 
