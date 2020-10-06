@@ -81,6 +81,7 @@ main(){
       google_credentials=$INPUT_GOOGLE_CREDENTIALS_STAGING
       launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
     fi
+    google_application_credentials=$INPUT_GOOGLE_APPLICATION_CREDENTIALS
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
     sed -i -e "s#@SECRET_KEY_ALT@#\"${INPUT_SECRET_KEY_ALT}\"#g" $FILE
     sed -i -e "s#@DB_FULL_URL@#${db_full_url}#g" $FILE
@@ -102,10 +103,13 @@ main(){
     if [ ! -z "${google_credentials}" ]; then
       CREDENTIALS=$(echo "$google_credentials" | base64 -d)
       echo "  GOOGLE_CREDENTIALS: '$CREDENTIALS'" >> $FILE
+      if [ ! -z "${google_application_credentials}" ]; then
+        echo $CREDENTIALS > credentials.json
+        cat credentials.json
+      fi
     fi
 
     mv $FILE app.yaml
-    cat app.yaml
   else
     echo "${FILE} file don't exist."
 
