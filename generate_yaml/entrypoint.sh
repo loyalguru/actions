@@ -63,7 +63,7 @@ main(){
     FILE=app_example_staging.yaml
   fi
 
-  echo "STEP 1 OF 1: Generating app.yaml file from $FILE ..."
+  echo "TEST STEP 1 OF 1: Generating app.yaml file from $FILE ..."
 
   if [ -f "$FILE" ]; then
       ready="true"
