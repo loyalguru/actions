@@ -63,7 +63,7 @@ main(){
     FILE=app_example_staging.yaml
   fi
 
-  echo "TEST STEP 1 OF 1: Generating app.yaml file from $FILE ..."
+  echo "STEP 1 OF 1: Generating app.yaml file from $FILE ..."
 
   if [ -f "$FILE" ]; then
       ready="true"
@@ -105,7 +105,7 @@ main(){
       echo "  GOOGLE_CREDENTIALS: '$CREDENTIALS'" >> $FILE
       if [ ! -z "${google_application_credentials}" ]; then
         echo $CREDENTIALS > credentials.json
-        cat credentials.json
+        sed -i -e "s/# COPY @ADDITIONAL_FILES@/COPY credentials.json ." Dockerfile
       fi
     fi
 
