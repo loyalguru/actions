@@ -7,5 +7,3 @@ How to create a new action
    Dockerfile
    entrypoint.sh
 - grant the sh file execution permissions (chmod)
-
-test
