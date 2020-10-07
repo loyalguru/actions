@@ -105,7 +105,7 @@ main(){
       echo "  GOOGLE_CREDENTIALS: '$CREDENTIALS'" >> $FILE
       if [ ! -z "${google_application_credentials}" ]; then
         echo $CREDENTIALS > credentials.json
-        sed -i -e "s/# COPY @ADDITIONAL_FILES@/COPY credentials.json ." Dockerfile
+        sed -i -e "s/# COPY @ADDITIONAL_FILES@/COPY credentials.json ./g" Dockerfile
       fi
     fi
 
