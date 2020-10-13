@@ -1,4 +1,4 @@
-FROM node:9.9.0-alpine
+FROM node:10.22-alpine
 
 LABEL "com.github.actions.name"="Build JS app"
 LABEL "com.github.actions.description"="Install NPM dependencies of a Javascript application"
@@ -21,7 +21,7 @@ RUN	apk add --no-cache --virtual .build-deps  \
 
 RUN npm config set unsafe-perm true
 
-RUN npm install -g @angular/cli@1.7.4
+RUN npm install -g @angular/cli@7.3.10
 
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh
