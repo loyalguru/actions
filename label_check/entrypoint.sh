@@ -72,7 +72,8 @@ main(){
             production_target="Y"
             label_to_check=$production_label
             DEPLOY_ENVIRONMENT="production"
-            echo "::set-env name=DEPLOY_ENVIRONMENT::production"
+            echo "DEPLOY_ENVIRONMENT=production" >> $GITHUB_ENV
+
         fi
 
         if [ "$label_name" = "$staging_label" ]; then
@@ -107,7 +108,7 @@ main(){
     fi
 
     if [ $staging_target = "Y" ]; then
-        echo "::set-env name=DEPLOY_ENVIRONMENT::${DEPLOY_ENVIRONMENT}"
+        echo "DEPLOY_ENVIRONMENT=${DEPLOY_ENVIRONMENT}" >> $GITHUB_ENV
         if [ $production_target = "Y" ]; then
             resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${production_label}" \
                 -H "Authorization: token ${TOKEN}")
@@ -117,7 +118,7 @@ main(){
     fi
 
     if [ $production_target = "Y" ] && [ $has_migration_label = "Y" ]; then
-        echo "::set-env name=WITH_MIGRATION::${has_migration_label}"
+        echo "WITH_MIGRATION=${has_migration_label}" >> $GITHUB_ENV
         migration_message="true"
     fi
 
