@@ -156,32 +156,37 @@ main(){
 
     echo "...done"
 
-    # Check if branch is up to date with master
+    repo=$(curl -X GET "https://api.github.com/repos/${GITHUB_REPOSITORY}" \
+    -H "Authorization: token ${TOKEN}")
+
+    default_branch=$(echo "${repo}" | jq -r .default_branch)
+
+    # Check if branch is up to date with default branch
     branch=$(jq --raw-output .pull_request.head.ref ${GITHUB_EVENT_PATH})
     echo ""
     echo ""
-    echo "Checking if ${branch} is up to date with master..."
+    echo "Checking if ${branch} is up to date with ${default_branch}..."
 
     git config remote.origin.url "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
     git fetch
 
-    revision=$(git rev-list --left-right --count origin/master...origin/${branch} | head -c 1)
+    revision=$(git rev-list --left-right --count origin/${default_branch}...origin/${branch} | head -c 1)
 
-    echo "$(git rev-list --left-right --count origin/master...origin/${branch})"
+    echo "$(git rev-list --left-right --count origin/${default_branch}...origin/${branch})"
     echo ${revision}
 
     if [ "$revision" != "0" ];then
         echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
         echo " "
-        echo "CANNOT DEPLOY YOUR BANCH IS BEHIND MASTER";
+        echo "CANNOT DEPLOY YOUR BANCH IS BEHIND ${default_branch}";
         echo " "
         echo " 🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  🚫  "
         resp_del2=$(curl -X DELETE "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/$label_to_check" \
         -H "Authorization: token ${TOKEN}")
         echo ${resp_del2}
 
-        message="Your branch is behind master!"
+        message="Your branch is behind ${default_branch}!"
         type="failed"
         send_chat_message "$type \"$DEPLOY_ENVIRONMENT\" \"$message\""
         trap : 0
