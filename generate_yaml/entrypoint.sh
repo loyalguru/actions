@@ -75,11 +75,15 @@ main(){
     google_credentials=$INPUT_GOOGLE_CREDENTIALS
     launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY
     papertrail_url=$INPUT_PAPERTRAIL_URL
+    post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID
+    post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON
     if [ "$is_staging" = "true" ]; then
       db_full_url=$(printf "%q" "$INPUT_DB_FULL_URL_STAGING")
       google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS_STAGING
       google_credentials=$INPUT_GOOGLE_CREDENTIALS_STAGING
       launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
+      post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID_STAGING
+      post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON_STAGING
     fi
     google_application_credentials=$INPUT_GOOGLE_APPLICATION_CREDENTIALS
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
@@ -108,6 +112,15 @@ main(){
         sed -i -e "s/# COPY @ADDITIONAL_FILES@/COPY credentials.json ./g" Dockerfile
       fi
     fi
+
+    if [ ! -z "${post_action_events_pub_sub_project_id}" ]; then
+      echo "  POST_ACTION_EVENTS_PUBSUB_PROJECT_ID: '$post_action_events_pub_sub_project_id'" >> $FILE
+    fi  
+
+    if [ ! -z "${post_action_events_pub_sub_credentials_json}" ]; then
+      POSTACTIONEVENTSCREDENTIALS=$(echo "$post_action_events_pub_sub_credentials_json" | base64 -d)
+      echo "  POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON: '$POSTACTIONEVENTSCREDENTIALS'" >> $FILE
+    fi    
 
     mv $FILE app.yaml
   else
