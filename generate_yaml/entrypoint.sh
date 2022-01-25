@@ -77,6 +77,7 @@ main(){
     papertrail_url=$INPUT_PAPERTRAIL_URL
     post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID
     post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON
+    redis_url=$INPUT_REDIS_URL
     if [ "$is_staging" = "true" ]; then
       db_full_url=$(printf "%q" "$INPUT_DB_FULL_URL_STAGING")
       google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS_STAGING
@@ -84,6 +85,7 @@ main(){
       launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
       post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID_STAGING
       post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON_STAGING
+      redis_url=$INPUT_REDIS_URL_STAGING
     fi
     google_application_credentials=$INPUT_GOOGLE_APPLICATION_CREDENTIALS
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
@@ -99,6 +101,7 @@ main(){
     sed -i -e "s#@SENTRY_DSN@#\'${INPUT_SENTRY_DSN}'#g" $FILE
     sed -i -e "s#@LAUNCHDARKLY_SDKKEY@#\'${launchdarkly_sdkkey}'#g" $FILE
     sed -i -e "s#@PAPERTRAIL_URL@#${papertrail_url}#g" $FILE
+    sed -i -e "s#@REDIS_URL@#${redis_url}#g" $FILE
     if [ ! -z "${google_pub_sub_credentials}" ]; then
       PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
       echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
