@@ -77,6 +77,8 @@ main(){
   fi
   
   # git config --global --add safe.directory /github/workspace
+  
+  git fetch --all --unshallow
 
   git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
 
