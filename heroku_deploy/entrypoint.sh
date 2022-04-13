@@ -76,7 +76,7 @@ main(){
     heroku features:disable preboot -a ${app_name}
   fi
   
-  # git config --global --add safe.directory /github/workspace
+  git config --global --add safe.directory /github/workspace
   
   git fetch --all --unshallow
 
