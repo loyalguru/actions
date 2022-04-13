@@ -75,6 +75,8 @@ main(){
   if  [ "${DEPLOY_ENVIRONMENT}" = "production" ] && [ "${WITH_MIGRATION}" = "Y" ]; then
     heroku features:disable preboot -a ${app_name}
   fi
+  
+  git config --global --add safe.directory /github/workspace
 
   git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${app_name}.git HEAD:master -f
 
