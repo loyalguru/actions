@@ -78,6 +78,8 @@ main(){
     post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID
     post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON
     redis_url=$INPUT_REDIS_URL
+    redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER
+    redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD
     if [ "$is_staging" = "true" ]; then
       db_full_url=$(printf "%q" "$INPUT_DB_FULL_URL_STAGING")
       google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS_STAGING
@@ -86,6 +88,8 @@ main(){
       post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID_STAGING
       post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON_STAGING
       redis_url=$INPUT_REDIS_URL_STAGING
+      redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER_STAGING
+      redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD_STAGING
     fi
     google_application_credentials=$INPUT_GOOGLE_APPLICATION_CREDENTIALS
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
@@ -93,8 +97,8 @@ main(){
     sed -i -e "s#@DB_FULL_URL@#${db_full_url}#g" $FILE
     sed -i -e "s/@REDIS_CACHE_USER@/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
     sed -i -e "s/@REDIS_CACHE_PASSWORD@/'${INPUT_REDIS_CACHE_PASSWORD}'/g" $FILE
-    sed -i -e "s/@REDIS_SIDEKIQ_USER@/'${INPUT_REDIS_SIDEKIQ_USER}'/g" $FILE
-    sed -i -e "s/@REDIS_SIDEKIQ_PASSWORD@/'${INPUT_REDIS_SIDEKIQ_PASSWORD}'/g" $FILE
+    sed -i -e "s/@REDIS_SIDEKIQ_USER@/'${redis_sidekiq_user}'/g" $FILE
+    sed -i -e "s/@REDIS_SIDEKIQ_PASSWORD@/'${redis_sidekiq_password}'/g" $FILE
     sed -i -e "s#@AWS_ACCESS_KEY_ID@#'${INPUT_AWS_ACCESS_KEY_ID}'#g" $FILE
     sed -i -e "s#@AWS_SECRET_ACCESS_KEY@#'${INPUT_AWS_SECRET_ACCESS_KEY}'#g" $FILE
     sed -i -e "s/@DATADOG_API_KEY@/'${INPUT_DATADOG_API_KEY}'/g" $FILE
