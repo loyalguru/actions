@@ -87,7 +87,6 @@ main(){
       launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
       post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID_STAGING
       post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON_STAGING
-      raw_data_pub_sub_topic=$INPUT_RAW_DATA_PUBSUB_TOPIC_STAGING
       raw_data_pub_sub_project_id=$INPUT_RAW_DATA_PUBSUB_PROJECT_ID_STAGING
       raw_data_pub_sub_credentials_json=$INPUT_RAW_DATA_PUBSUB_CREDENTIALS_JSON_STAGING
       redis_url=$INPUT_REDIS_URL_STAGING
