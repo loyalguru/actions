@@ -87,6 +87,8 @@ main(){
       launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY_STAGING
       post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID_STAGING
       post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON_STAGING
+      raw_data_pub_sub_project_id=$INPUT_RAW_DATA_PUBSUB_PROJECT_ID_STAGING
+      raw_data_pub_sub_credentials_json=$INPUT_RAW_DATA_PUBSUB_CREDENTIALS_JSON_STAGING
       redis_url=$INPUT_REDIS_URL_STAGING
       redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER_STAGING
       redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD_STAGING
@@ -122,12 +124,21 @@ main(){
 
     if [ ! -z "${post_action_events_pub_sub_project_id}" ]; then
       echo "  POST_ACTION_EVENTS_PUBSUB_PROJECT_ID: '$post_action_events_pub_sub_project_id'" >> $FILE
-    fi  
+    fi
 
     if [ ! -z "${post_action_events_pub_sub_credentials_json}" ]; then
       POSTACTIONEVENTSCREDENTIALS=$(echo "$post_action_events_pub_sub_credentials_json" | base64 -d)
       echo "  POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON: '$POSTACTIONEVENTSCREDENTIALS'" >> $FILE
-    fi    
+    fi
+
+    if [ ! -z "${raw_data_pub_sub_project_id}" ]; then
+      echo "  RAW_DATA_PUBSUB_PROJECT_ID: '$raw_data_pub_sub_project_id'" >> $FILE
+    fi
+
+    if [ ! -z "${raw_data_pub_sub_credentials_json}" ]; then
+      RAWDATACREDENTIALS=$(echo "$raw_data_pub_sub_credentials_json" | base64 -d)
+      echo "  RAW_DATA_PUBSUB_CREDENTIALS_JSON: '$RAWDATACREDENTIALS'" >> $FILE
+    fi
 
     mv $FILE app.yaml
   else
