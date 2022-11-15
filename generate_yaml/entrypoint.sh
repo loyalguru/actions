@@ -77,6 +77,8 @@ main(){
     papertrail_url=$INPUT_PAPERTRAIL_URL
     post_action_events_pub_sub_project_id=$INPUT_POST_ACTION_EVENTS_PUBSUB_PROJECT_ID
     post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON
+    raw_data_pub_sub_project_id=$INPUT_RAW_DATA_PUBSUB_PROJECT_ID
+    raw_data_pub_sub_credentials_json=$INPUT_RAW_DATA_PUBSUB_CREDENTIALS_JSON
     redis_url=$INPUT_REDIS_URL
     redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER
     redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD
