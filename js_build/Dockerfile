@@ -10,7 +10,7 @@ LABEL "homepage"="http://github.com/loyalguru/actions/js_build"
 LABEL "maintainer"="Dario Castañé <dcastane@loyal.guru> / Jose Osorno <josorno@loyal.guru>"
 
 RUN	apk add --no-cache --virtual .build-deps  \
-    make gcc g++ python \
+    make gcc g++ \
     git \
 	bash \
 	ca-certificates \
