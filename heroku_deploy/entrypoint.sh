@@ -89,10 +89,63 @@ main(){
     migration_message="true"
   fi
 
-  if [ "${DEPLOY_ENVIRONMENT}" != "production" -a "${DEPLOY_ENVIRONMENT}" != "preproduction" ]; then
-    heroku run --app ${app_name} rake db:migrate
+  echo "...done"
+
+  echo ""
+  echo ""
+  echo "Running migrations..."
+  
+  heroku run --app ${app_name} rake db:migrate
+
+
+  echo "...done"
+
+
+  echo ""
+  echo ""
+  echo "Replicating workers..."
+
+  
+  token=${INPUT_RAILSTOKEN}
+  if [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
+    token=${INPUT_RAILSTOKEN_STAGING}
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_2" ]; then
+    token=${INPUT_RAILSTOKEN_STAGING_TWO}
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ]; then
+    token=${INPUT_RAILSTOKEN_STAGING_THREE}
+
   fi
 
+  url="https://api.loyal.guru/deploy/replicate_workers"
+  if [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
+    url="https://staging.loyal.guru/deploy/replicate_workers"
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_2" ]; then
+    url="https://loyal-guru-api-staging-2.herokuapp.com/deploy/replicate_workers"
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ]; then
+    url="https://loyal-guru-api-staging-3.herokuapp.com/deploy/replicate_workers"
+
+  fi
+
+  resp=$(curl -s -X POST ${url}\
+      -H "Authorization: Basic ${token}" \
+      -H "Content-Type: application/json" \
+      -o /dev/null \
+      -w '%{http_code}')
+
+  echo $resp
+  if [ $resp -ne 201 ]; then
+    echo "Replicate workers: unexpected response. Code was deployed, please manually execute the replication. EXITING NOW..."
+
+    message="Replicate workers: Unexpected response. Code was deployed, please manually execute the replication."
+    type="failed"
+    send_chat_message "$type \"$environment\" \"$message\""
+
+    exit 1
+  fi
   echo "...done"
 
   type="success"
