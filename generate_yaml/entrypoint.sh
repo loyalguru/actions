@@ -110,6 +110,7 @@ main(){
     sed -i -e "s#@LAUNCHDARKLY_SDKKEY@#\'${launchdarkly_sdkkey}'#g" $FILE
     sed -i -e "s#@PAPERTRAIL_URL@#${papertrail_url}#g" $FILE
     sed -i -e "s#@REDIS_URL@#${redis_url}#g" $FILE
+    sed -i -e "s#@METLO_API_KEY@#${INPUT_METLO_API_KEY}#g" $FILE
     if [ ! -z "${google_pub_sub_credentials}" ]; then
       PUBSUBCREDENTIALS=$(echo "$google_pub_sub_credentials" | base64 -d)
       echo "  GOOGLE_PUBSUB_CREDENTIALS: '$PUBSUBCREDENTIALS'" >> $FILE
