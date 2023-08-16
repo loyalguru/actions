@@ -47,8 +47,8 @@ main(){
     production_label="deploy"
     migration_label="migration"
     staging_label="deploy_staging"
-    staging_label_two="deploy_staging_2"
-    staging_label_three="deploy_staging_3"
+    staging_label_two="deploy_staging2"
+    staging_label_three="deploy_staging3"
 
     production_target="N"
     staging_target="N"
@@ -85,13 +85,13 @@ main(){
         elif [ "$label_name" = "$staging_label_two" ]; then
             echo "...has '${staging_label_two}' label..."
             staging_target="Y"
-            DEPLOY_ENVIRONMENT="staging_2"
+            DEPLOY_ENVIRONMENT="staging2"
             label_to_check=$staging_label_two
 
         elif [ "$label_name" = "$staging_label_three" ]; then
             echo "...has '${staging_label_three}' label..."
             staging_target="Y"
-            DEPLOY_ENVIRONMENT="staging_3"
+            DEPLOY_ENVIRONMENT="staging3"
             label_to_check=$staging_label_three
         fi
 
