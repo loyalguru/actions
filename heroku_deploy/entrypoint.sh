@@ -63,10 +63,10 @@ main(){
   if [ "${DEPLOY_ENVIRONMENT}" = "production" ]; then
     app_name=${INPUT_HEROKU_APP_NAME}
 
-  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_2" ]; then
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging2" ]; then
     app_name=${INPUT_HEROKU_APP_NAME_STAGING_TWO}
 
-  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ]; then
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging3" ]; then
     app_name=${INPUT_HEROKU_APP_NAME_STAGING_THREE}
 
   fi
@@ -110,10 +110,10 @@ main(){
   if [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
     token=${INPUT_RAILSTOKEN_STAGING}
 
-  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_2" ]; then
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging2" ]; then
     token=${INPUT_RAILSTOKEN_STAGING_TWO}
 
-  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ]; then
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging3" ]; then
     token=${INPUT_RAILSTOKEN_STAGING_THREE}
 
   fi
@@ -122,10 +122,10 @@ main(){
   if [ "${DEPLOY_ENVIRONMENT}" = "staging" ]; then
     url="https://staging.loyal.guru/deploy/replicate_workers"
 
-  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_2" ]; then
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging2" ]; then
     url="https://loyal-guru-api-staging-2.herokuapp.com/deploy/replicate_workers"
 
-  elif [ "${DEPLOY_ENVIRONMENT}" = "staging_3" ]; then
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging3" ]; then
     url="https://loyal-guru-api-staging-3.herokuapp.com/deploy/replicate_workers"
 
   fi
