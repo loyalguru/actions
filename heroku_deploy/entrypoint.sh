@@ -53,7 +53,7 @@ main(){
     exit 1
   fi
 
-  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging_2" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging_3" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
+  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging2" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging3" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
     echo "...${DEPLOY_ENVIRONMENT} is not a valid environment"
     echo "ERROR"
     exit 1
