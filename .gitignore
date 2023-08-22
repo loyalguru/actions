@@ -1,2 +1,4 @@
 .idea
 .DS_Store
+.vscode
+/notify_deploy/test/output

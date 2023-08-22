@@ -1,0 +1,11 @@
+{
+    "title": "Test notify action",
+    "number": 39,
+    "pull_request": {
+        "_links": {
+            "html": {
+                "href": "https://github.com/loyalguru/actions/pull/39"
+            }
+        }
+    }
+}
