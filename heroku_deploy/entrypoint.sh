@@ -53,7 +53,7 @@ main(){
     exit 1
   fi
 
-  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging2" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging3" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
+  if [ "${DEPLOY_ENVIRONMENT}" != "staging" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging2" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging3" ] && [ "${DEPLOY_ENVIRONMENT}" != "staging3" ] && [ "${DEPLOY_ENVIRONMENT}" != "production" ]; then
     echo "...${DEPLOY_ENVIRONMENT} is not a valid environment"
     echo "ERROR"
     exit 1
@@ -69,6 +69,8 @@ main(){
   elif [ "${DEPLOY_ENVIRONMENT}" = "staging3" ]; then
     app_name=${INPUT_HEROKU_APP_NAME_STAGING_THREE}
 
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging4" ]; then
+    app_name=${INPUT_HEROKU_APP_NAME_STAGING_FOUR}
   fi
 
   # The preboot will be always active, only when the label “migration” is present will be disabled.
@@ -116,6 +118,9 @@ main(){
   elif [ "${DEPLOY_ENVIRONMENT}" = "staging3" ]; then
     token=${INPUT_RAILSTOKEN_STAGING_THREE}
 
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging4" ]; then
+    token=${INPUT_RAILSTOKEN_STAGING_FOUR}
+
   fi
 
   url="https://api.loyal.guru/deploy/replicate_workers"
@@ -127,6 +132,9 @@ main(){
 
   elif [ "${DEPLOY_ENVIRONMENT}" = "staging3" ]; then
     url="https://loyal-guru-api-staging-3.herokuapp.com/deploy/replicate_workers"
+
+  elif [ "${DEPLOY_ENVIRONMENT}" = "staging4" ]; then
+    url="https://loyal-guru-api-staging-4.herokuapp.com/deploy/replicate_workers"
 
   fi
 
