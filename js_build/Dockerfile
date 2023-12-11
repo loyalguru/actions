@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 LABEL "com.github.actions.name"="Build JS app"
 LABEL "com.github.actions.description"="Install NPM dependencies of a Javascript application"
@@ -7,7 +7,7 @@ LABEL "com.github.actions.color"="green"
 
 LABEL "repository"="http://github.com/loyalguru/actions/js_build"
 LABEL "homepage"="http://github.com/loyalguru/actions/js_build"
-LABEL "maintainer"="Dario Castañé <dcastane@loyal.guru> / Jose Osorno <josorno@loyal.guru>"
+LABEL "maintainer"="Platform Team <platform@loyal.guru>"
 
 RUN	apk add --no-cache --virtual .build-deps  \
     make gcc g++ \
