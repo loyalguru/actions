@@ -19,8 +19,6 @@ RUN	apk add --no-cache --virtual .build-deps  \
 	jq \
 	coreutils
 
-RUN npm config set unsafe-perm true
-
 RUN npm install -g @angular/cli@15.1.4
 
 ADD chat.sh /chat.sh
