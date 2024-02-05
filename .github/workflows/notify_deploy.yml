@@ -1,0 +1,37 @@
+name: Notify Deploy
+
+on:
+  workflow_dispatch: ~
+  deployment_status:
+    types: [created, completed, in_progress, queued, success, failure, inactive]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    environment: "Platform Test"
+    env:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CKEY: ${{ secrets.CKEY }}
+      CTOKEN: ${{ secrets.CTOKEN }}
+      SPACE: ${{ vars.SPACE }}
+    outputs:
+      message_id: ${{ steps.notify.outputs.message_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: notify
+        name: Notify deployment
+        uses: loyalguru/actions/notify_deploy@PLAT-981-improve-actions
+        if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'created'
+        with:
+          type: action
+          environment: staging
+          err: ""
+          migration: ""
+  print-outputs:
+    runs-on: ubuntu-latest
+    needs: notify
+    steps:
+      - env:
+          MESSAGE_ID: ${{needs.notify.outputs.message_id}}
+        run: echo "$MESSAGE_ID"
