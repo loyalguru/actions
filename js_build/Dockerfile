@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:latest
 
 LABEL "com.github.actions.name"="Build JS app"
 LABEL "com.github.actions.description"="Install NPM dependencies of a Javascript application"
