@@ -17,6 +17,8 @@ RUN	apk add --no-cache \
 	jq \
 	coreutils
 
+
+
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh
 ADD entrypoint.sh /entrypoint.sh
