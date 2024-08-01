@@ -79,6 +79,8 @@ main(){
     post_action_events_pub_sub_credentials_json=$INPUT_POST_ACTION_EVENTS_PUBSUB_CREDENTIALS_JSON
     raw_data_pub_sub_project_id=$INPUT_RAW_DATA_PUBSUB_PROJECT_ID
     raw_data_pub_sub_credentials_json=$INPUT_RAW_DATA_PUBSUB_CREDENTIALS_JSON
+    ticket_publication_pub_sub_project_id=$INPUT_TICKET_PUBLICATION_PUBSUB_PROJECT_ID
+    ticket_publication_pub_sub_credentials_json=$INPUT_TICKET_PUBLICATION_PUBSUB_CREDENTIALS_JSON
     redis_url=$INPUT_REDIS_URL
     redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER
     redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD
@@ -141,6 +143,15 @@ main(){
     if [ ! -z "${raw_data_pub_sub_credentials_json}" ]; then
       RAWDATACREDENTIALS=$(echo "$raw_data_pub_sub_credentials_json" | base64 -d)
       echo "  RAW_DATA_PUBSUB_CREDENTIALS_JSON: '$RAWDATACREDENTIALS'" >> $FILE
+    fi
+
+    if [ ! -z "${ticket_publication_pub_sub_project_id}" ]; then
+      echo "  TICKET_PUBLICATION_PUBSUB_PROJECT_ID: '$ticket_publication_pub_sub_project_id'" >> $FILE
+    fi
+
+    if [ ! -z "${ticket_publication_pub_sub_credentials_json}" ]; then
+      TICKETPUBLICATIONCREDENTIALS=$(echo "$ticket_publication_pub_sub_credentials_json" | base64 -d)
+      echo "  TICKET_PUBLICATION_PUBSUB_CREDENTIALS_JSON: '$TICKETPUBLICATIONCREDENTIALS'" >> $FILE
     fi
 
     mv $FILE app.yaml
