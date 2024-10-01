@@ -81,8 +81,8 @@ main(){
     raw_data_pub_sub_credentials_json=$INPUT_RAW_DATA_PUBSUB_CREDENTIALS_JSON
     ticket_publication_pub_sub_project_id=$INPUT_TICKET_PUBLICATION_PUBSUB_PROJECT_ID
     ticket_publication_pub_sub_credentials_json=$INPUT_TICKET_PUBLICATION_PUBSUB_CREDENTIALS_JSON
-    redeem_pub_sub_project_id=$INPUT_REDEEEM_PUBSUB_PROJECT_ID
-    redeem_pub_sub_credentials_json=$INPUT_REDEEEM_PUBSUB_CREDENTIALS_JSON
+    redeem_pub_sub_project_id=$INPUT_REDEEM_PUBSUB_PROJECT_ID
+    redeem_pub_sub_credentials_json=$INPUT_REDEEM_PUBSUB_CREDENTIALS_JSON
     redis_url=$INPUT_REDIS_URL
     redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER
     redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD
