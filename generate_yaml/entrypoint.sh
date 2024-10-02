@@ -81,6 +81,8 @@ main(){
     raw_data_pub_sub_credentials_json=$INPUT_RAW_DATA_PUBSUB_CREDENTIALS_JSON
     ticket_publication_pub_sub_project_id=$INPUT_TICKET_PUBLICATION_PUBSUB_PROJECT_ID
     ticket_publication_pub_sub_credentials_json=$INPUT_TICKET_PUBLICATION_PUBSUB_CREDENTIALS_JSON
+    redeem_pub_sub_project_id=$INPUT_REDEEM_PUBSUB_PROJECT_ID
+    redeem_pub_sub_credentials_json=$INPUT_REDEEM_PUBSUB_CREDENTIALS_JSON
     redis_url=$INPUT_REDIS_URL
     redis_sidekiq_user=$INPUT_REDIS_SIDEKIQ_USER
     redis_sidekiq_password=$INPUT_REDIS_SIDEKIQ_PASSWORD
@@ -152,6 +154,15 @@ main(){
     if [ ! -z "${ticket_publication_pub_sub_credentials_json}" ]; then
       TICKETPUBLICATIONCREDENTIALS=$(echo "$ticket_publication_pub_sub_credentials_json" | base64 -d)
       echo "  TICKET_PUBLICATION_PUBSUB_CREDENTIALS_JSON: '$TICKETPUBLICATIONCREDENTIALS'" >> $FILE
+    fi
+
+    if [ ! -z "${redeem_pub_sub_project_id}" ]; then
+      echo "  REDEEM_PUBSUB_PROJECT_ID: '$redeem_pub_sub_project_id'" >> $FILE
+    fi
+
+    if [ ! -z "${redeem_pub_sub_credentials_json}" ]; then
+      REDEEMCREDENTIALS=$(echo "$redeem_pub_sub_credentials_json" | base64 -d)
+      echo "  REDEEM_PUBSUB_CREDENTIALS_JSON: '$REDEEMCREDENTIALS'" >> $FILE
     fi
 
     mv $FILE app.yaml
