@@ -1,0 +1,38 @@
+# action.yml
+name: 'Notify Deploy'
+description: 'Notify deployment in chat and send Datadog event'
+inputs:
+  type:
+    description: 'Notification type'
+    required: true
+    default: 'success'
+  environment:
+    description: 'Environment where deploy is done'
+    required: true
+    default: 'testing'
+  err:
+    description: 'Error message in case deployment fails'
+    required: false
+    default: ''
+  migration:
+    description: 'Migration needs to be executed'
+    required: false
+    default: ''
+  replace_message:
+    description: 'Message ID for the message to be replaced'
+    required: false
+    default: ''
+outputs:
+  time:
+    description: 'The time when message has been published'
+  message_id:
+    description: 'ID of the generated message'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.type }}
+    - ${{ inputs.environment }}
+    - ${{ inputs.err }}
+    - ${{ inputs.migration }}
+    - ${{ inputs.replace_message }}
