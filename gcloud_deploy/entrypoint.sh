@@ -80,8 +80,11 @@ main(){
      echo "${INPUT_APPLICATION_CREDENTIALS}" | base64 -d > /tmp/account.json
 
      gcloud auth activate-service-account --key-file=/tmp/account.json
+     export CLOUDSDK_CORE_PROJECT="$INPUT_PROJECT_ID"
+     echo "CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT" >> $GITHUB_ENV
      echo "This is the project: $INPUT_PROJECT_ID"
      gcloud config set project "$INPUT_PROJECT_ID"
+
   fi
 
   command_argument='--no-promote'
