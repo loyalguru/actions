@@ -19,7 +19,7 @@ RUN	apk add --no-cache --virtual .build-deps  \
 	jq \
 	coreutils
 
-RUN npm install -g @angular/cli@17.2.0
+RUN npm install -g @angular/cli@18.2.20
 
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh
