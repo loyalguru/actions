@@ -71,6 +71,7 @@ main(){
 
   if [ "$ready" = "true" ]; then
     db_full_url=$(printf "%q" "$INPUT_DB_FULL_URL")
+    db_full_loyalty_read_url=$(printf "%q" "$INPUT_DB_FULL_LOYALTY_READ_URL")
     google_pub_sub_credentials=$INPUT_GOOGLE_PUBSUB_CREDENTIALS
     google_credentials=$INPUT_GOOGLE_CREDENTIALS
     launchdarkly_sdkkey=$INPUT_LAUNCHDARKLY_SDKKEY
@@ -102,6 +103,7 @@ main(){
     google_application_credentials=$INPUT_GOOGLE_APPLICATION_CREDENTIALS
     sed -i -e "s#@SECRET_KEY@#\"${INPUT_SECRET_KEY}\"#g" $FILE
     sed -i -e "s#@SECRET_KEY_ALT@#\"${INPUT_SECRET_KEY_ALT}\"#g" $FILE
+    sed -i -e "s#@DB_FULL_LOYALTY_READ_URL@#${db_full_loyalty_read_url}#g" $FILE
     sed -i -e "s#@DB_FULL_URL@#${db_full_url}#g" $FILE
     sed -i -e "s/@REDIS_CACHE_USER@/'${INPUT_REDIS_CACHE_USER}'/g" $FILE
     sed -i -e "s/@REDIS_CACHE_PASSWORD@/'${INPUT_REDIS_CACHE_PASSWORD}'/g" $FILE
