@@ -1,4 +1,4 @@
-FROM alpine/git
+FROM alpine/git:2.54.1
 
 LABEL "com.github.actions.name"="Generate YAML file"
 LABEL "com.github.actions.description"="Generate app.yml file with Github secrets on the fly"

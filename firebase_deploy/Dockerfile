@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:24.22.1-alpine
 
 LABEL "com.github.actions.name"="Deploy to Firebase"
 LABEL "com.github.actions.description"="Deploy a Javascript application to firebase"
@@ -17,7 +17,7 @@ RUN	apk add --no-cache \
 	jq \
 	coreutils
 
-RUN npm install -g firebase-tools
+RUN npm install -g firebase-tools@15.37.0
 
 ADD chat.sh /chat.sh
 RUN chmod +x /chat.sh
